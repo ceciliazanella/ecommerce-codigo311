@@ -4,7 +4,7 @@ import { Navbar, Nav, NavDropdown } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar, faBolt } from "@fortawesome/free-solid-svg-icons";
 import logo from "../assets/logo.svg";
-import "./NavBar.css";
+import "../styles/NavBar.css";
 
 export const NavBar = () => {
   const [activeLink, setActiveLink] = useState("");

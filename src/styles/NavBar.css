@@ -19,6 +19,7 @@
 
 .nav-link:hover {
     color: #36213e !important;
+
     transition: color 0.3s ease;
 }
 
@@ -49,7 +50,7 @@
 }
 
 .dropdown-item:focus {
-    background-color: none !important;
+    background-color: transparent !important;
 }
 
 .dropdown-item.active {
@@ -60,14 +61,17 @@
     color: #d0ccd0 !important;
 }
 
+
 /* Animaciones Íconos */
 .star-icon {
     color: #6a0dad;
+
     animation: pulseStar 1.5s infinite alternate;
 }
 
 .bolt-icon {
     color: #ffd700;
+
     animation: pulseBolt 1.5s infinite alternate;
 }
 
@@ -95,22 +99,10 @@
     }
 }
 
+
 /* Media Queries */
-@media (max-width: 760px) {
+@media (min-width: 760px) {
     .navbar-custom {
         padding: 1rem;
-    }
-
-    .cart-icon {
-        width: 30px;
-    }
-
-    .cart-notification {
-        top: -6px;
-        right: -16px;
-        width: 18px;
-        height: 18px;
-
-        font-size: 0.8rem;
     }
 }

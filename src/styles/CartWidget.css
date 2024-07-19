@@ -1,5 +1,6 @@
 .cart-icon {
     width: 40px;
+    margin-top: 1rem;
     position: relative;
 
     transition: transform 0.8s ease-out
@@ -12,21 +13,37 @@
 }
 
 .cart-notification {
-    border-radius: 50%;
-    width: 25px;
-    height: 25px;
+    width: 20px;
+    height: 20px;
+    padding: 0.5rem;
     background-color: #Cc9933;
+    border-radius: 50%;
 
     position: absolute;
-    top: -8px;
-    right: -25px;
+    top: -2px;
+    right: -20px;
 
     font-family: "Monserrat", sans-serif;
-    font-size: 1.2rem;
+    font-size: 1rem;
     font-weight: 600;
     color: #D0CCD0;
 
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+
+/* Media Queries */
+@media (min-width: 760px) {
+    .cart-icon {
+        margin-top: 0rem;
+    }
+
+    .cart-notification {
+        width: 20px;
+        height: 20px;
+        top: -8px;
+        right: -20px;
+    }
 }

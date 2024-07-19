@@ -1,5 +1,5 @@
 import cartIcon from "../assets/cart.svg";
-import "./CartWidget.css";
+import "../styles/CartWidget.css";
 
 export const CartWidget = ({ quantity }) => {
   return (
