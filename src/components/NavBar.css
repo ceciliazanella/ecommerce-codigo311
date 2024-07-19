@@ -1,0 +1,116 @@
+.navbar-custom {
+    width: 100%;
+    padding: 2rem;
+    background-color: #d0ccd0;
+    border-radius: 0 3rem 0 6rem;
+}
+
+.navbar-logo {
+    width: 130px;
+}
+
+.nav-link {
+    font-size: 1rem;
+    font-weight: 400;
+    color: #1c6e8c;
+
+    transition: color 0.6s ease;
+}
+
+.nav-link:hover {
+    color: #36213e !important;
+    transition: color 0.3s ease;
+}
+
+.nav-link.active {
+    color: #63768d;
+    font-weight: 600;
+}
+
+.dropdown-menu {
+    background-color: transparent !important;
+    border: none !important;
+}
+
+.dropdown-item {
+    font-size: 0.8rem !important;
+    font-weight: 400 !important;
+    color: #63768d;
+
+    transition: color 0.6s ease;
+}
+
+.dropdown-item:hover {
+    background-color: transparent !important;
+
+    color: #36213e;
+
+    transition: color 0.3s ease;
+}
+
+.dropdown-item:focus {
+    background-color: none !important;
+}
+
+.dropdown-item.active {
+    padding: 1rem;
+    background-color: #63768d !important;
+    border-radius: 0.5rem 0 0.8rem 0;
+
+    color: #d0ccd0 !important;
+}
+
+/* Animaciones Íconos */
+.star-icon {
+    color: #6a0dad;
+    animation: pulseStar 1.5s infinite alternate;
+}
+
+.bolt-icon {
+    color: #ffd700;
+    animation: pulseBolt 1.5s infinite alternate;
+}
+
+@keyframes pulseStar {
+    from {
+        transform: scale(0.8);
+        color: #ff57d2;
+    }
+
+    to {
+        transform: scale(1.2);
+        color: #36213e;
+    }
+}
+
+@keyframes pulseBolt {
+    from {
+        transform: scale(0.8);
+        color: #ffff00;
+    }
+
+    to {
+        transform: scale(1.2);
+        color: #936c1d;
+    }
+}
+
+/* Media Queries */
+@media (max-width: 760px) {
+    .navbar-custom {
+        padding: 1rem;
+    }
+
+    .cart-icon {
+        width: 30px;
+    }
+
+    .cart-notification {
+        top: -6px;
+        right: -16px;
+        width: 18px;
+        height: 18px;
+
+        font-size: 0.8rem;
+    }
+}

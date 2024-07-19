@@ -1,0 +1,32 @@
+.cart-icon {
+    width: 40px;
+    position: relative;
+
+    transition: transform 0.8s ease-out
+}
+
+.cart-icon:hover {
+    cursor: pointer;
+    transform: scale(1.2);
+    transition: transform 0.2s ease-in;
+}
+
+.cart-notification {
+    border-radius: 50%;
+    width: 25px;
+    height: 25px;
+    background-color: #Cc9933;
+
+    position: absolute;
+    top: -8px;
+    right: -25px;
+
+    font-family: "Monserrat", sans-serif;
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #D0CCD0;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
