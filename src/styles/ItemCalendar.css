@@ -1,0 +1,241 @@
+.item-calendar {
+  width: 100%;
+
+  position: relative;
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+  justify-content: center;
+
+  font-family: "Montserrat";
+  text-align: center;
+}
+
+.reservation-form {
+  width: 100%;
+  margin-bottom: 1rem;
+  padding: 2rem;
+  background-color: #D0CCD0;
+  border-radius: 2rem 1rem 2.5rem 1rem;
+  border: 6px solid #D0CCD0;
+  box-shadow: 2px 2px 6px #274156;
+
+  display: flex;
+  flex-wrap: nowrap;
+
+  flex-direction: column;
+
+  align-content: center;
+  justify-items: center;
+
+  font-family: "Montserrat";
+  font-size: 0.8rem;
+  text-align: center;
+}
+
+.item-info {
+  width: 100%;
+}
+
+.item-calendar input {
+  width: 180px;
+  border-radius: 1rem 0.5rem;
+
+  font-family: "Montserrat";
+  font-size: 0.4rem;
+  text-align: left;
+}
+
+.item-calendar .reservation-title {
+  font-family: "Montserrat";
+  color: #36213E;
+  font-size: 1.2rem;
+  text-shadow: 0.5px 0.5px 2px #000000;
+  text-align: center;
+}
+
+.item-calendar {
+  background-color: transparent;
+
+  color: #60495A;
+  font-size: 1rem;
+  font-weight: 700;
+  text-transform: capitalize;
+}
+
+.item-calendar h2 {
+  margin-bottom: 1rem;
+
+  font-family: "Caveat";
+  font-size: 1.8rem;
+  font-weight: 700;
+  text-transform: capitalize;
+  color: #274156;
+}
+
+.reservation-form .reservation-label {
+  margin-top: 1rem;
+
+  display: flex;
+  flex-wrap: nowrap;
+
+  flex-direction: column;
+
+  justify-items: center;
+  align-content: center;
+
+  font-family: "Caveat";
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.reservation-form .date-picker,
+.reservation-form .time-select {
+  margin-top: 1rem;
+  padding: 0.5rem;
+  border-radius: 1rem 0.5rem 1.5rem 0.5rem;
+
+  color: #1C6E8C;
+  font-family: "Montserrat";
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.reservation-form .date-picker:focus,
+.reservation-form .time-select:focus {
+  box-shadow: inset 1.5px 1.5px 5px #000000;
+  outline: 2px solid #Cc9933;
+}
+
+.reservation-form .react-datepicker__month-container {
+  background-color: #907F9F;
+  border: none;
+
+  font-family: "Montserrat";
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.reservation-form .react-datepicker__day {
+  color: #D0CCD0;
+  font-family: "Montserrat";
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.reservation-form .react-datepicker__day:hover {
+  background-color: #Cc9933;
+
+  color: #1C6E8C;
+  text-shadow: 1px 1px 1.5px#000000;
+}
+
+.reservation-form .react-datepicker__day:focus {
+  background-color: #Cc9933;
+
+  color: #1C6E8C;
+  text-shadow: 1px 1px 1.5px#000000;
+}
+
+.reservation-form .react-datepicker__day--disabled {
+  color: #36213E;
+  font-family: "Montserrat";
+  font-size: 0.8rem;
+  font-weight: 400;
+}
+
+.reservation-form .react-datepicker__day--selected {
+  background-color: #1C6E8C;
+
+  color: #Cc9933;
+  text-shadow: 1px 1px 1.5px#000000;
+  font-family: "Montserrat";
+  font-size: 1rem;
+  font-weight: 800;
+}
+
+.reservation-form .react-datepicker__day-name {
+  color: #36213E;
+  font-family: "Montserrat";
+  font-size: 0.8rem;
+  font-weight: 800;
+}
+
+.reservation-form .react-datepicker__header {
+  background-color: #63768D;
+}
+
+.reservation-form .react-datepicker__current-month {
+  color: #274156;
+  font-family: "Caveat";
+  font-size: 1.4rem;
+  font-weight: 800;
+  text-shadow: 1px 1px 1.5px #000000;
+}
+
+.reservation-form .react-datepicker__navigation:hover {
+  color: #1C6E8C;
+}
+
+.reservation-form .time-select {
+  padding: 1rem;
+  background-color: #907F9F;
+
+  font-family: "Montserrat";
+  color: #D0CCD0;
+}
+
+.reservation-form .btn {
+  background-color: #907F9F;
+  border: 2px solid#D0CCD0;
+  box-shadow: 1px 1px 1px #000000;
+
+  color: #D0CCD0;
+  font-family: "Montserrat";
+  text-shadow: 0.5px 0.5px 1px rgb(0, 0, 0);
+  font-size: 1rem;
+  font-weight: 800;
+  text-transform: none;
+  text-align: center;
+}
+
+.reservation-form .btn:hover {
+  background-color: #36213E;
+  border: none;
+  box-shadow: none;
+
+  color: #Cc9933;
+  text-shadow: -1px -1px 1.5px rgb(0, 0, 0);
+}
+
+.reservation-form .btn-success {
+  background-color: transparent;
+  border: none;
+  box-shadow: none;
+
+  color: #Cc9933;
+  font-family: "Caveat";
+  font-size: 1.8rem;
+  text-transform: none;
+  text-align: center;
+  text-shadow: 1px -0.5px 0.5px #000000;
+}
+
+
+/* MQ */
+@media (min-width: 760px) {
+  .reservation-form {
+    margin: 0 3rem 2rem 2rem;
+  }
+
+  .item-calendar input {
+    width: 240px;
+  }
+
+  .item-info {
+    margin-left: 2rem;
+  }
+}

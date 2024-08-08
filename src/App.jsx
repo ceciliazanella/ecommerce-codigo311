@@ -1,16 +1,65 @@
+import React, { useState, useCallback } from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { NavBar } from "./components/NavBar";
 import { ItemListContainer } from "./components/ItemListContainer";
+import { ItemDetailContainer } from "./components/ItemDetailContainer";
+import { CartContextProvider } from "./context/CartContext";
+import { Cart } from "./components/Cart";
+import { Home } from "./components/Home";
+import { Footer } from "./components/Footer";
 
 function App() {
+  const [cartQuantity, setCartQuantity] = useState(0);
+  const [cartVisible, setCartVisible] = useState(false);
+
+  const addToCart = useCallback((count) => {
+    setCartQuantity((prevQuantity) => prevQuantity + count);
+  }, []);
+
+  const toggleCartVisibility = useCallback(() => {
+    setCartVisible((prevVisible) => !prevVisible);
+  }, []);
+
   return (
-    <>
-      <header>
-        <NavBar />
-      </header>
-      <main>
-        <ItemListContainer greeting="Bienvenidos al espacio que investiga la conexión entre el Cielo y la Tierra a través de las Estrellas!" />
-      </main>
-    </>
+    <CartContextProvider>
+      <Router>
+        <header>
+          <NavBar
+            toggleCart={toggleCartVisibility}
+            cartQuantity={cartQuantity}
+          />
+        </header>
+        <main>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route
+              path="/consultoria"
+              element={
+                <ItemListContainer
+                  h1="Consultoría Astrológica"
+                  category="consultoria"
+                  addToCart={addToCart}
+                />
+              }
+            />
+            <Route
+              path="/cursos"
+              element={
+                <ItemListContainer
+                  h1="Cursos On Demand"
+                  category="cursos"
+                  addToCart={addToCart}
+                />
+              }
+            />
+            <Route path="/item/:id" element={<ItemDetailContainer />} />
+            <Route path="/cart" element={<Cart />} />
+          </Routes>
+          {cartVisible && <Cart />}
+        </main>
+        <Footer />
+      </Router>
+    </CartContextProvider>
   );
 }
 

@@ -1,49 +1,61 @@
-.cart-icon {
-    width: 40px;
-    margin-top: 1rem;
-    position: relative;
+.cart-widget {
+  width: 60px;
+  margin: 2rem 0;
 
-    transition: transform 0.8s ease-out
+  position: relative;
+
+  display: inline-block;
+}
+
+.cart-icon {
+  margin-top: 2rem;
+
+  display: flex;
+
+  filter: drop-shadow(-1px 1px 0.8px #00000078);
+
+  transition: all 0.8s ease-in;
 }
 
 .cart-icon:hover {
-    cursor: pointer;
-    transform: scale(1.2);
-    transition: transform 0.2s ease-in;
+  cursor: pointer;
+
+  filter: drop-shadow(1px 1px 1px #Cc9933);
+
+  transform: scale(1.2);
+  transition: all 0.3s ease-out;
 }
 
 .cart-notification {
-    width: 20px;
-    height: 20px;
-    padding: 0.5rem;
-    background-color: #Cc9933;
-    border-radius: 50%;
+  padding: 0.6rem;
+  background-color: #Cc9933;
+  box-shadow: inset 1px 1px 3px #000000;
+  border-radius: 2rem 1rem 2rem 0.5rem;
 
-    position: absolute;
-    top: -2px;
-    right: -20px;
+  position: absolute;
+  top: 10px;
+  right: -10px;
 
-    font-family: "Monserrat", sans-serif;
-    font-size: 1rem;
-    font-weight: 600;
-    color: #D0CCD0;
-
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  font-family: "Montserrat";
+  color: #274156;
+  font-size: 1.2rem;
+  font-weight: 600;
+  text-shadow: 0.5px 0.5px 1px #000000;
 }
 
 
-/* Media Queries */
+/* MQ */
 @media (min-width: 760px) {
-    .cart-icon {
-        margin-top: 0rem;
-    }
+  .cart-widget {
+    width: 70px;
+  }
 
-    .cart-notification {
-        width: 20px;
-        height: 20px;
-        top: -8px;
-        right: -20px;
-    }
+  .cart-icon {
+    margin-top: 0;
+  }
+
+  .cart-notification {
+    top: -20px;
+    right: -10px;
+  }
 }

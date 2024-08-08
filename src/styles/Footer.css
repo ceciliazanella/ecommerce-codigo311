@@ -1,0 +1,87 @@
+.footer {
+  margin-top: 4rem;
+  padding: 4rem;
+  background-color: #63768D;
+  border-top: 4px solid #D0CCD0;
+
+  text-align: center;
+}
+
+.footer-content {
+  display: flex;
+  flex-wrap: nowrap;
+
+  flex-direction: column;
+
+  align-items: center;
+  justify-content: space-between;
+}
+
+.footer-text {
+  flex: 1;
+
+  font-family: "Montserrat";
+  color: #D0CCD0;
+  font-size: 1rem;
+  text-align: center;
+}
+
+.footer-text .bold-text {
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.2rem;
+}
+
+.footer-icons {
+  margin-top: 2rem;
+
+  flex: 1;
+
+  text-align: center;
+}
+
+.footer-icon {
+  margin: 0 10px;
+
+  font-size: 1.5rem;
+  color: #274156;
+
+  transition: color 0.6s ease-in;
+}
+
+.footer-icon:hover {
+  color: #D0CCD0;
+
+  transition: color 0.3s ease-out;
+}
+
+
+/* MQ */
+@media (min-width: 760px) {
+  .footer-content {
+    display: flex;
+    flex-wrap: wrap;
+
+    flex-direction: row;
+
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .footer-text {
+    margin-right: 2rem;
+
+    flex: 1;
+
+    font-family: "Montserrat";
+    color: #D0CCD0;
+    font-size: 1rem;
+    text-align: left;
+  }
+
+  .footer-icons {
+    flex: 1;
+
+    text-align: right;
+  }
+}

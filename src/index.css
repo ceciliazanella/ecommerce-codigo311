@@ -5,25 +5,258 @@
   box-sizing: border-box;
 }
 
-body {
-  background-color: #ffffff;
+a {
+  text-decoration: none;
+}
 
-  display: flex;
-  align-items: center;
-  justify-content: center;
+input {
+  box-shadow: inset 1px 1px 1px #000000;
+}
+
+body {
+  width: 100%;
+  margin: 0 auto;
+  background-color: #ffffff;
 
   font-family: 'Montserrat', sans-serif;
 }
 
 header {
   width: 100%;
-  padding: 1.5rem;
-  background-color: #D0CCD0;
-  border-radius: 0 3rem 0 6rem;
 
   display: flex;
-  align-items: center;
-  justify-content: space-between;
 
-  font-family: 'Montserrat', sans-serif;
+  align-items: center;
+  justify-content: center;
+
+  font-family: 'Montserrat';
+}
+
+main {
+  width: 100%;
+  margin-top: 2rem;
+
+  display: flex;
+  flex-wrap: nowrap;
+
+  flex-direction: column;
+
+  align-items: center;
+  justify-content: center;
+
+  font-family: 'Montserrat';
+}
+
+main h1 {
+  margin: 0 auto;
+  padding: 2rem;
+
+  color: #63768d;
+  text-shadow: 1px 1px 1px #00000078;
+  font-size: 1.6rem;
+  font-weight: 600;
+  text-align: center;
+  line-height: 2rem;
+}
+
+
+/* BOTONES */
+.btn {
+  margin: 2rem 0 0 0;
+  padding: 0.8rem 1rem;
+  background-color: #63768d;
+  box-shadow: 0 0 6px #274156;
+  border: 2px solid #D0CCD0;
+  border-radius: 2rem 1rem;
+
+  position: relative;
+
+  color: #D0CCD0;
+  text-transform: uppercase;
+  text-shadow: 1px 1px 1px #000000;
+
+  transition: background-color 1s, border-color 1s, color 1s ease-in;
+}
+
+.btn:hover {
+  background-color: #274156;
+  border: none;
+  box-shadow: -2px -2px 2px #0000006c;
+
+  color: #D0CCD0;
+
+  transition: background-color 0.5s, border-color 0.5s, color 0.5s ease-out;
+  animation: shake-vertical 0.3s;
+}
+
+
+/* KF */
+@keyframes pulseStar {
+  from {
+    transform: scale(0.8);
+    color: #ff57d2;
+  }
+
+  to {
+    transform: scale(1.2);
+    color: #36213e;
+  }
+}
+
+@keyframes pulseBolt {
+  from {
+    transform: scale(0.8);
+    color: #ffff00;
+  }
+
+  to {
+    transform: scale(1.2);
+    color: #936c1d;
+  }
+}
+
+@keyframes shake-vertical {
+  0% {
+    transform: translateY(0);
+  }
+
+  25% {
+    transform: translateY(-4px);
+  }
+
+  50% {
+    transform: translateY(4px);
+  }
+
+  75% {
+    transform: translateY(-4px);
+  }
+
+  100% {
+    transform: translateY(0);
+  }
+}
+
+@keyframes vibrate {
+  0% {
+    transform: translateX(0);
+  }
+
+  25% {
+    transform: translateX(-2px);
+  }
+
+  50% {
+    transform: translateX(2px);
+  }
+
+  75% {
+    transform: translateX(-2px);
+  }
+
+  100% {
+    transform: translateX(0);
+  }
+}
+
+
+/*SWAL*/
+.swal2-popup {
+  background-color: #D0CCD0;
+  border-radius: 4rem 1rem 4rem 1rem;
+  box-shadow: 0 0 10px #274156;
+}
+
+.swal2-popup .swal2-title {
+  font-family: "Caveat";
+  color: #60495A;
+  font-size: 2.6rem;
+  font-weight: 700;
+}
+
+.swal2-popup .swal2-html-container {
+  font-family: "Montserrat";
+  color: #1C6E8C;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.swal2-popup .swal2-icon {
+  border-color: #60495A;
+  box-shadow: 1px 1px 2px#000000;
+
+  filter: drop-shadow(1px 1px 2px#000000);
+}
+
+.swal2-popup .swal2-icon-content {
+  color: #1C6E8C;
+}
+
+.swal2-actions {
+  font-family: "Montserrat";
+  color: #D0CCD0;
+  font-size: 1.3rem;
+  font-weight: 600;
+  text-shadow: 0 0 1px #000000;
+
+  transition: all 0.6s ease-in-out;
+}
+
+.swal2-confirm {
+  background-color: #907F9F;
+  box-shadow: 0 0 10px #Cc9933;
+  border-radius: 2.5rem 1rem;
+
+  color: #D0CCD0;
+  font-size: 1rem;
+  text-shadow: 1px 1px 3px #000000;
+
+  transition: all 0.8s ease-in-out;
+}
+
+.swal2-confirm:hover {
+  background-color: #36213E;
+  box-shadow: 1px 1px 2px #000000;
+
+  color: #Cc9933;
+
+  transition: all 0.3s ease-out;
+  transform: scale(1.2);
+}
+
+.swal2-cancel {
+  background-color: #63768d;
+  box-shadow: 0 0 10px #Cc9933;
+  border-radius: 2.5rem 1rem;
+
+  color: #D0CCD0;
+  font-size: 1rem;
+  text-shadow: 1px 1px 3px #000000;
+
+  transition: all 0.8s ease-in;
+}
+
+.swal2-cancel:hover {
+  background-color: #274156;
+  box-shadow: 1px 1px 2px #000000;
+
+  color: #Cc9933;
+
+  transition: all 0.3s ease-out;
+  transform: scale(1.2);
+}
+
+
+/* MQ */
+@media (min-width: 760px) {
+  header {
+    padding: 0 2rem;
+  }
+
+  main h1 {
+    padding: 4rem 10rem;
+
+    font-size: 1.8rem;
+    line-height: 2.2rem;
+  }
 }

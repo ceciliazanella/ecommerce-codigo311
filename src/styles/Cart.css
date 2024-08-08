@@ -1,0 +1,231 @@
+.cart-overlay {
+  width: 100%;
+  height: 100%;
+  background-color: #36213e88;
+
+  position: fixed;
+  top: 0;
+  left: 0;
+
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+
+  z-index: 1000;
+
+  overflow-y: auto;
+}
+
+.cart-content {
+  max-width: 600px;
+  width: 100%;
+  padding: 2rem;
+  background-color: #D0CCD0;
+  border-radius: 3rem 1.5rem 6rem 3rem;
+  box-shadow: 0 0 10px #36213E;
+
+  position: relative;
+
+  overflow: hidden;
+
+  font-family: "Montserrat";
+  color: #36213E;
+}
+
+.cart-content h2 {
+  color: #36213E;
+  font-size: 1.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  text-shadow: 1px 1px 2px #00000079;
+  letter-spacing: 0.5rem;
+}
+
+.cart-content h3 {
+  margin-top: 2rem;
+
+  font-family: "Caveat";
+  color: #60495A;
+  font-size: 1.7rem;
+  font-weight: 600;
+}
+
+.cart-content h4 {
+  margin-top: 2rem;
+
+  font-family: "Montserrat";
+  color: #1C6E8C;
+  font-size: 1.4rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.cart-content h5 {
+  margin: 1rem 0 2rem 0;
+
+  font-family: "Montserrat";
+  color: #274156;
+  font-size: 1.1rem;
+  font-weight: 800;
+}
+
+.cart-content .btn {
+  background-color: #63768D;
+  border: 2px solid #D0CCD0;
+  border-radius: 2rem 1.5rem 1rem 2rem;
+  box-shadow: 1px 1px 1.5px #000000;
+
+  color: #D0CCD0;
+  font-family: "Montserrat";
+  font-size: 1rem;
+  font-weight: 600;
+  text-shadow: 0 0.5px 1px #000000;
+
+  transition: all 0.8s ease;
+}
+
+.cart-content .btn:hover {
+  background-color: #274156;
+  border: none;
+  box-shadow: none;
+
+  color: #Cc9933;
+  font-weight: 800;
+  text-shadow: -0.5px -0.5px 1px #000000;
+
+  transition: all 0.4s ease;
+  animation: vibrate 0.25s ease;
+}
+
+.close-button {
+  padding: 0;
+  background: none;
+  border: none;
+
+  position: absolute;
+  top: 3px;
+  right: 35px;
+
+  color: #60495A;
+  font-size: 4rem;
+  font-weight: 800;
+  text-shadow: 1px 2px 1px #00000078;
+
+  cursor: pointer;
+
+  transition: all 0.6s ease-in;
+}
+
+.close-button:hover {
+  color: #36213E;
+  text-shadow: none;
+
+  transition: all 0.3s ease-out;
+  transform: scale(1.2);
+}
+
+.cart-item {
+  margin-bottom: 2rem;
+  padding-bottom: 2rem;
+  border-bottom: 4px solid #60495A;
+  border-radius: 2rem 1rem;
+}
+
+.cart-item-details p {
+  margin-top: 1rem;
+
+  color: #36213E;
+  font-family: "Montserrat";
+  font-size: 1rem;
+  font-weight: 600;
+  text-transform: capitalize;
+  line-height: 0.3rem;
+}
+
+.item-count-cart {
+  margin-top: 2rem;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 0.5rem;
+}
+
+.item-count-cart button {
+  margin: 0 5px;
+  padding: 0.5rem;
+}
+
+.item-count-cart button:disabled {
+  background: #D0CCD0;
+  border-color: #907F9F;
+  box-shadow: none;
+
+  cursor: not-allowed;
+}
+
+.item-count-cart span {
+  color: #1C6E8C;
+  font-family: "Montserrat";
+  font-size: 1.6rem;
+  font-weight: 800;
+}
+
+.item-count-cart .btn,
+.cart-item-details .btn {
+  background-color: #907F9F;
+  border: 2px solid #D0CCD0;
+  box-shadow: 1px 1px 1.5px #000000;
+
+  color: #D0CCD0;
+  font-family: "Montserrat";
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-shadow: 0 0.5px 1px #000000;
+
+  transition: all 0.6s ease;
+}
+
+.item-count-cart .btn:hover,
+.cart-item-details .btn:hover {
+  background-color: #36213E;
+  border: none;
+  box-shadow: none;
+
+  color: #Cc9933;
+  font-weight: 800;
+  text-shadow: -0.5px -0.5px 1px #000000;
+
+  transition: all 0.3s ease;
+  animation: shake-vertical 0.25s ease;
+}
+
+.cart-content .cart-total {
+  margin: 2rem 0;
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+  justify-content: center;
+}
+
+.cart-content .cart-total h3 {
+  margin-top: 2rem;
+
+  color: #36213E;
+  font-family: "Montserrat";
+  font-size: 1.4rem;
+  font-weight: 800;
+  text-align: left;
+}
+
+.cart-icon {
+  width: 80%;
+  height: 80%;
+
+  object-fit: cover;
+  overflow: hidden;
+}

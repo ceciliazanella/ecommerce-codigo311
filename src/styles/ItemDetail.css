@@ -1,0 +1,135 @@
+.item-detail {
+  width: 320px;
+  margin: 0 auto;
+  padding: 4rem;
+  background-color: transparent;
+  box-shadow: 5px 10px 15px #36213E;
+  border-radius: 6rem 1rem 6rem 2rem;
+}
+
+.item-detail .item-image-container {
+  width: 250px;
+  height: 400px;
+  margin-bottom: 2rem;
+  border-radius: 4rem 0.5rem 4rem 1rem;
+  border: 2px solid #D0CCD0;
+  box-shadow: 1.5px 1.5px 3px #36213E;
+
+  display: flex;
+  flex-direction: column;
+
+  align-items: center;
+  justify-content: center;
+}
+
+.item-detail .item-image-container img {
+  width: 100%;
+  height: 100%;
+  border-radius: 4rem 0.5rem 4rem 1rem;
+
+  object-fit: cover;
+  overflow: hidden;
+
+  transition: filter 0.9s ease-in-out;
+}
+
+.item-detail .item-image-container img:hover {
+  filter: brightness(150%);
+
+  transition: filter 0.3s ease-in-out;
+}
+
+.item-detail .item-title {
+  margin: 6rem 0 0 0;
+
+  color: #36213E;
+  font-size: 2rem;
+  font-weight: 700;
+  text-shadow: 0 0 3px #36213E;
+}
+
+.item-detail .item-description {
+  margin-bottom: 2rem;
+
+  font-family: "Montserrat";
+  color: #36213E;
+  font-size: 1.1rem;
+  text-align: left;
+  line-height: 1.5;
+  text-transform: none;
+  font-weight: 400;
+  line-height: 1.5rem;
+}
+
+.item-detail .item-price {
+  margin: 2rem;
+
+  color: #274156;
+  font-size: 1.2rem;
+  text-shadow: 0.5px 0.5px 2px #000000;
+  font-weight: 700;
+  text-align: center;
+}
+
+.btn-volver {
+  margin: 2rem 0 4rem 0;
+  padding: 1rem 2rem;
+  border-radius: 1.5rem 0.8rem 0.8rem 2rem;
+  background-color: #60495A;
+  box-shadow: 1px 1px 2.5px #000000;
+  border: 2px solid #Cc9933;
+
+  color: #D0CCD0;
+  font-family: "Montserrat";
+  font-size: 1.1rem;
+  font-weight: 800;
+  text-align: center;
+  text-shadow: 1px 1px 2px #000000;
+
+  transition: all 0.8s ease;
+}
+
+.btn-volver:hover {
+  background-color: #36213E;
+  box-shadow: none;
+  border: none;
+
+  color: #Cc9933;
+  text-shadow: -1px -1px 2px #000000;
+
+  transition: all 0.3s ease;
+  animation: vibrate 0.2s ease;
+}
+
+
+/* MQ */
+@media (min-width: 760px) {
+  .item-detail .item-image-container {
+    width: 280px;
+    height: 400px;
+  }
+
+  .item-detail {
+    width: 780px;
+
+    display: flex;
+
+    flex-direction: row;
+
+    align-items: center;
+    justify-content: center;
+  }
+
+  .item-detail .item-image-container {
+    width: 600px;
+    height: 560px;
+    border-radius: 4rem 0.5rem 4rem 1rem;
+    border: 2px solid #D0CCD0;
+    box-shadow: 1.5px 1.5px 3px #36213E;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+  }
+}

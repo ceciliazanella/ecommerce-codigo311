@@ -1,90 +1,91 @@
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import { CartWidget } from "./CartWidget";
 import { Navbar, Nav, NavDropdown } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar, faBolt } from "@fortawesome/free-solid-svg-icons";
+import { Link } from "react-router-dom";
+import { useCart } from "../context/CartContext";
 import logo from "../assets/logo.svg";
+import "bootstrap/dist/css/bootstrap.min.css";
 import "../styles/NavBar.css";
 
-export const NavBar = () => {
+export const NavBar = ({ toggleCart }) => {
   const [activeLink, setActiveLink] = useState("");
+  const { courses } = useCart();
 
-  const handleNavLinkClick = (link) => {
+  const cartCount = courses.reduce((acc, course) => acc + course.quantity, 0);
+
+  const handleNavLinkClick = useCallback((link) => {
     setActiveLink(link);
-  };
+  }, []);
 
   const navLinkClass = (linkName) =>
     `nav-link ${activeLink === linkName ? "active" : ""}`;
-
-  const navItemStyle = (linkName) => ({
-    color: activeLink === linkName ? "#36213E" : "#63768D",
-  });
 
   return (
     <header>
       <Navbar expand="lg" className="navbar-custom">
         <Navbar.Brand>
-          <img
-            src={logo}
-            alt="Logo de Código 3.11 Astrología Evolutiva"
-            className="navbar-logo"
-          />
+          <Link to="/">
+            <img
+              src={logo}
+              alt="Logo de Código 3.11 Astrología Evolutiva"
+              className="navbar-logo"
+            />
+          </Link>
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav" className="justify-content-end">
           <Nav className="ml-auto align-items-center">
             <Nav.Link
-              href="#"
+              as={Link}
+              to="/"
               className={navLinkClass("Home")}
               onClick={() => handleNavLinkClick("Home")}
-              style={navItemStyle("Home")}
             >
               Home
             </Nav.Link>
             <NavDropdown
               title="Servicios"
               id="basic-nav-dropdown"
-              className={`nav-link ${
-                activeLink.startsWith("Servicios") ? "active" : ""
-              }`}
+              className={navLinkClass("Servicios")}
             >
               <NavDropdown.Item
-                href="#"
-                className={`dropdown-item ${navLinkClass(
-                  "Consultas Astrológicas"
-                )}`}
-                onClick={() => handleNavLinkClick("Consultas Astrológicas")}
-                style={navItemStyle("Consultas Astrológicas")}
+                as={Link}
+                to="/consultoria"
+                className={navLinkClass("Consultoría Astrológica")}
+                onClick={() => handleNavLinkClick("Consultoría Astrológica")}
               >
-                Consultas Astrológicas
+                Consultoría Astrológica
               </NavDropdown.Item>
               <NavDropdown.Item
-                href="#"
-                className={`dropdown-item ${navLinkClass("Cursos On Demand")}`}
+                as={Link}
+                to="/cursos"
+                className={navLinkClass("Cursos On Demand")}
                 onClick={() => handleNavLinkClick("Cursos On Demand")}
-                style={navItemStyle("Cursos On Demand")}
               >
                 Cursos On Demand
               </NavDropdown.Item>
             </NavDropdown>
             <Nav.Link
-              href="#"
+              as={Link}
+              to="/create-account"
               className={navLinkClass("Crear Cuenta")}
               onClick={() => handleNavLinkClick("Crear Cuenta")}
-              style={navItemStyle("Crear Cuenta")}
             >
-              Crear Cuenta{" "}
+              Crear Cuenta
               <FontAwesomeIcon icon={faStar} className="star-icon" />
             </Nav.Link>
             <Nav.Link
-              href="#"
+              as={Link}
+              to="/login"
               className={navLinkClass("Ingresar")}
               onClick={() => handleNavLinkClick("Ingresar")}
-              style={navItemStyle("Ingresar")}
             >
-              Ingresar <FontAwesomeIcon icon={faBolt} className="bolt-icon" />
+              Ingresar
+              <FontAwesomeIcon icon={faBolt} className="bolt-icon" />
             </Nav.Link>
-            <CartWidget quantity={9} />
+            <CartWidget count={cartCount} toggleCart={toggleCart} />
           </Nav>
         </Navbar.Collapse>
       </Navbar>

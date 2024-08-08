@@ -1,52 +1,67 @@
 .navbar-custom {
-    width: 100%;
-    padding: 2rem;
-    background-color: #d0ccd0;
-    border-radius: 0 3rem 0 6rem;
+    width: 300px;
+    padding: 2rem 2rem 3rem 2rem;
+    background-color: #D0CCD0;
+    box-shadow: 0 2px 4px #274156;
+    border-radius: 1rem 6rem 1rem 8rem;
+}
+
+.navbar-nav {
+    margin-top: 2rem;
 }
 
 .navbar-logo {
     width: 130px;
+
+    filter: drop-shadow(-1px 1px 0.8px #00000078);
 }
 
 .nav-link {
+    font-family: "Montserrat";
+    color: #1C6E8C;
     font-size: 1rem;
-    font-weight: 400;
-    color: #1c6e8c;
+    font-weight: 600;
+    letter-spacing: 0.1rem;
+    text-shadow: 0 1px 1.2px #000000;
 
-    transition: color 0.6s ease;
+    transition: color 1s ease-in;
 }
 
 .nav-link:hover {
-    color: #36213e !important;
+    color: #907F9F;
+    font-weight: 700;
 
-    transition: color 0.3s ease;
+    transition: color 0.2s ease-out;
 }
 
 .nav-link.active {
-    color: #63768d;
-    font-weight: 600;
+    color: #60495A !important;
+    font-weight: 700;
+    text-shadow: -0.3px -0.3px 1px #000000;
 }
 
 .dropdown-menu {
+    padding: 0.5rem;
     background-color: transparent !important;
     border: none !important;
+    border-radius: 0.5rem 0 0.8rem 0;
+    box-shadow: 1px 2px 3px #274156 !important;
 }
 
 .dropdown-item {
-    font-size: 0.8rem !important;
-    font-weight: 400 !important;
-    color: #63768d;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #1C6E8C;
 
-    transition: color 0.6s ease;
+    transition: color 1s ease-in;
 }
 
 .dropdown-item:hover {
     background-color: transparent !important;
 
-    color: #36213e;
+    color: #907F9F !important;
 
-    transition: color 0.3s ease;
+    transition: color 0.2s ease-out;
 }
 
 .dropdown-item:focus {
@@ -62,47 +77,32 @@
 }
 
 
-/* Animaciones Íconos */
+/* ANIMACIONES PARA ÍCONOS */
 .star-icon {
+    margin-left: 0.5rem;
+
     color: #6a0dad;
 
     animation: pulseStar 1.5s infinite alternate;
 }
 
 .bolt-icon {
+    margin-left: 0.5rem;
+
     color: #ffd700;
 
     animation: pulseBolt 1.5s infinite alternate;
 }
 
-@keyframes pulseStar {
-    from {
-        transform: scale(0.8);
-        color: #ff57d2;
-    }
 
-    to {
-        transform: scale(1.2);
-        color: #36213e;
-    }
-}
-
-@keyframes pulseBolt {
-    from {
-        transform: scale(0.8);
-        color: #ffff00;
-    }
-
-    to {
-        transform: scale(1.2);
-        color: #936c1d;
-    }
-}
-
-
-/* Media Queries */
+/* MQ */
 @media (min-width: 760px) {
     .navbar-custom {
-        padding: 1rem;
+        width: 100%;
+        padding: 4rem;
+    }
+
+    .navbar-nav {
+        margin-top: 0;
     }
 }

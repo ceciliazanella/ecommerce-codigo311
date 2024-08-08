@@ -1,0 +1,138 @@
+.item-card {
+  width: 300px;
+  height: 580px;
+  padding: 2rem;
+  background-color: #ffffff;
+  border-radius: 1rem 3rem 6rem 1rem;
+  box-shadow: 3px 6px 8px #36213E;
+
+  font-family: "Montserrat";
+  text-align: center;
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+  justify-content: space-around;
+
+  overflow: hidden;
+
+  transition: transform 0.5s ease, box-shadow 0.5s ease-in;
+}
+
+.item-card:hover {
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+
+  transition: transform 0.2s ease, box-shadow 0.2s ease-out;
+  transform: scale(1.02);
+}
+
+.item-card .item-link {
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+  justify-content: center;
+}
+
+.item-card .item-category {
+  width: 200px;
+  height: 30px;
+  padding: 0.4rem 0.8rem;
+  background-color: #60495A;
+  box-shadow: inset 0 0 8px #36213E;
+  border-radius: 2rem 1rem 2rem 1rem;
+
+  align-items: center;
+  justify-content: center;
+}
+
+.item-card .item-image {
+  max-width: 280px;
+  max-height: 220px;
+  border: solid 2px #D0CCD0;
+  border-radius: 1rem 3rem 6rem 1rem;
+  box-shadow: 1px 1px 5px #000000;
+
+  overflow: hidden;
+  object-fit: cover;
+
+  transition: filter 0.6s ease-in;
+}
+
+.item-card .item-image:hover {
+  filter: brightness(1.2);
+  transition: filter 0.3s ease-out;
+}
+
+.item-card .item-image {
+  width: 100%;
+  height: 100%;
+
+  object-fit: cover;
+  overflow: hidden;
+}
+
+.item-card h2 {
+  margin: 1rem auto;
+
+  color: #D0CCD0;
+  font-size: 1rem;
+  font-weight: 700;
+  text-align: center;
+  letter-spacing: 0.2rem;
+}
+
+.item-card h3 {
+  margin: 1rem auto;
+  padding: 0;
+
+  color: #274156;
+  font-size: 1.3rem;
+  font-weight: 700;
+  letter-spacing: 0.05rem;
+  line-height: 1.3rem;
+  text-align: center;
+  text-transform: uppercase;
+  text-shadow: 0 0 2px #000000;
+}
+
+.item-card h4 {
+  color: #907F9F;
+  font-size: 1.2rem;
+  font-weight: 600;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.item-card .item-info {
+  margin: 0;
+  padding: 0;
+
+  font-family: "Montserrat";
+}
+
+.item-card .card-footer {
+  margin: 0;
+
+  font-family: "Montserrat";
+}
+
+.item-card .btn {
+  margin: 1rem 0 0 0;
+  box-shadow: 1px 1px 2px #000000;
+  border-radius: 1.5rem 1rem 2rem 1.5rem;
+
+  font-size: 1rem;
+  font-weight: 800;
+  text-shadow: 1px 1px 2px #000000;
+}
+
+.item-card .btn:hover {
+  box-shadow: none;
+
+  color: #Cc9933;
+  text-shadow: -0.5px -0.5px 2px #000000;
+}
