@@ -4,10 +4,8 @@ import { useCart } from "../context/CartContext";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "../styles/ItemListContainer.css";
 
-const delay = 2000;
-
-const fetchItemsFromApi = async () => {
-  await new Promise((resolve) => setTimeout(resolve, delay));
+const itemsFromMock = async () => {
+  await new Promise((resolve) => setTimeout(resolve, 2000));
   const response = await fetch("/data/mockData.json");
 
   if (!response.ok) {
@@ -23,12 +21,12 @@ export const ItemListContainer = ({ category }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const fetchItems = useCallback(async () => {
+  const itemsMock = useCallback(async () => {
     setLoading(true);
     setError(null);
 
     try {
-      const { items: allItems } = await fetchItemsFromApi();
+      const { items: allItems } = await itemsFromMock();
       const filteredItems = allItems
         .filter((item) => item.category === category)
         .map((item) => {
@@ -48,8 +46,8 @@ export const ItemListContainer = ({ category }) => {
   }, [category, courses]);
 
   useEffect(() => {
-    fetchItems();
-  }, [fetchItems]);
+    itemsMock();
+  }, [itemsMock]);
 
   return (
     <div className="item-list-container">

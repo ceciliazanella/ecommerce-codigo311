@@ -4,10 +4,8 @@ import { ItemDetail } from "./ItemDetail";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "../styles/ItemDetailContainer.css";
 
-const delay = 2000;
-
-const fetchItemFromApi = async (id) => {
-  await new Promise((resolve) => setTimeout(resolve, delay));
+const itemFromMock = async (id) => {
+  await new Promise((resolve) => setTimeout(resolve, 2000));
   const response = await fetch("/data/mockData.json");
 
   if (!response.ok) {
@@ -25,12 +23,12 @@ export const ItemDetailContainer = () => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    const fetchItem = async () => {
+    const itemMock = async () => {
       setLoading(true);
       setError(null);
 
       try {
-        const foundItem = await fetchItemFromApi(id);
+        const foundItem = await itemFromMock(id);
         if (foundItem) {
           setItem(foundItem);
         } else {
@@ -46,7 +44,7 @@ export const ItemDetailContainer = () => {
       }
     };
 
-    fetchItem();
+    itemMock();
   }, [id]);
 
   return (

@@ -1,0 +1,15 @@
+.not-found {
+    text-align: center;
+}
+
+.not-found h1 {
+    font-family: "Montserrat";
+    font-size: 2rem;
+}
+
+.not-found p {
+    font-family: "Montserrat";
+    font-size: 1rem;
+    font-weight: 700;
+    color: #274156;
+}

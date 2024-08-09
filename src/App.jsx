@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { NavBar } from "./components/NavBar";
 import { ItemListContainer } from "./components/ItemListContainer";
 import { ItemDetailContainer } from "./components/ItemDetailContainer";
@@ -7,6 +7,7 @@ import { CartContextProvider } from "./context/CartContext";
 import { Cart } from "./components/Cart";
 import { Home } from "./components/Home";
 import { Footer } from "./components/Footer";
+import { NotFound } from "./components/NotFound";
 
 function App() {
   const [cartQuantity, setCartQuantity] = useState(0);
@@ -22,7 +23,7 @@ function App() {
 
   return (
     <CartContextProvider>
-      <Router>
+      <BrowserRouter>
         <header>
           <NavBar
             toggleCart={toggleCartVisibility}
@@ -54,11 +55,12 @@ function App() {
             />
             <Route path="/item/:id" element={<ItemDetailContainer />} />
             <Route path="/cart" element={<Cart />} />
+            <Route path="*" element={<NotFound />} />
           </Routes>
           {cartVisible && <Cart />}
         </main>
-        <Footer />
-      </Router>
+      </BrowserRouter>
+      <Footer />
     </CartContextProvider>
   );
 }
