@@ -1,4 +1,4 @@
-import React, { useState, useContext, useMemo } from "react";
+import { useState, useContext, useMemo } from "react";
 import Swal from "sweetalert2";
 import { CartContext } from "../context/CartContext";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -38,15 +38,15 @@ export const Cart = () => {
 
   const getConfirmText = (action) => {
     switch (action) {
-      case "Cancelar la Reserva de tu Turno":
-        return "¿Estás seguro/a que querés Cancelar la Reserva de tu Turno para realizar este Servicio?";
-      case "Eliminar este Servicio de tu Carrito":
+      case "Cancelar Reserva de Turno":
+        return "¿Estás seguro/a que querés Cancelar la Reserva de tu Turno?";
+      case "Eliminar Servicio del Carrito":
         return "¿Estás seguro/a que querés Eliminar este Servicio de tu Carrito?";
-      case "Vaciar todo tu Carrito":
+      case "Vaciar Carrito":
         return "¿Estás seguro/a que querés Vaciar todo tu Carrito?";
-      case "incrementar":
-        return "¿Estás seguro/a de querer Sumar otra Unidad más de este Curso?";
-      case "decrementar":
+      case "Sumar":
+        return "¿Estás seguro/a de querer Sumar una Unidad de este Curso?";
+      case "Restar":
         return "¿Estás seguro/a de querer Quitar una Unidad de este Curso?";
       default:
         return "";
@@ -55,6 +55,10 @@ export const Cart = () => {
 
   const handleAction = async (action, itemId, itemType, currentQuantity) => {
     const confirmText = getConfirmText(action);
+    console.log(`Acción Solicitada: ${action}`);
+    console.log(
+      `ID del Servicio: ${itemId}, Tipo: ${itemType}, Cantidad Actual: ${currentQuantity}`
+    );
 
     if (!confirmText) return;
 
@@ -67,37 +71,47 @@ export const Cart = () => {
       cancelButtonText: "No",
     });
 
-    if (!result.isConfirmed) return;
+    if (!result.isConfirmed) {
+      console.log("Acción Cancelada por el Usuario.");
+      return;
+    }
 
     switch (action) {
-      case "Cancelar la Reserva de tu Turno":
+      case "Cancelar Reserva de Turno":
+        console.log("Cancelando Reserva de Turno...");
         cancelReservation(itemId);
         break;
-      case "Eliminar este Servicio de tu Carrito":
+      case "Eliminar Servicio del Carrito":
+        console.log("Eliminando Servicio del Carrito...");
         removeItem(itemId, itemType);
         break;
-      case "Vaciar todo tu Carrito":
+      case "Vaciar Carrito":
+        console.log("Vaciando todo el Carrito...");
         clear();
         setIsVisible(false);
         break;
-      case "incrementar":
-      case "decrementar":
+      case "Sumar":
+      case "Restar":
+        console.log(`Actualizando Cantidad del Curso ${itemId}...`);
         const course = courses.find((course) => course.id === itemId);
         if (course) {
           const stockLeft = course.stock + course.quantity;
           if (
-            (action === "incrementar" && stockLeft > 0) ||
-            (action === "decrementar" && currentQuantity > 1)
+            (action === "Sumar" && stockLeft > 0) ||
+            (action === "Restar" && currentQuantity > 1)
           ) {
-            updateCartItem(
-              itemId,
-              currentQuantity + (action === "incrementar" ? 1 : -1),
-              itemType
+            const newQuantity = currentQuantity + (action === "Sumar" ? 1 : -1);
+            console.log(`Cantidad Actualizada: ${newQuantity}`);
+            updateCartItem(itemId, newQuantity, itemType);
+          } else {
+            console.log(
+              "No se puede actualizar la Cantidad (El Stock es insuficiente o se alcanzó la Cantidad mínima)."
             );
           }
         }
         break;
       default:
+        console.log("Acción no reconocida...");
         break;
     }
   };
@@ -108,7 +122,13 @@ export const Cart = () => {
   return (
     <div className="cart-overlay">
       <div className="cart-content">
-        <button className="close-button" onClick={() => setIsVisible(false)}>
+        <button
+          className="close-button"
+          onClick={() => {
+            console.log("Cerrando el Carrito...");
+            setIsVisible(false);
+          }}
+        >
           &times;
         </button>
         <h2>Carrito</h2>
@@ -131,14 +151,17 @@ export const Cart = () => {
                           <div className="item-count-cart">
                             <button
                               className="btn"
-                              onClick={() =>
+                              onClick={() => {
+                                console.log(
+                                  `Intentando Restar la Cantidad del Curso ${course.id}`
+                                );
                                 handleAction(
-                                  "decrementar",
+                                  "Restar",
                                   course.id,
                                   "cursos",
                                   course.quantity
-                                )
-                              }
+                                );
+                              }}
                               disabled={course.quantity <= 1}
                             >
                               -
@@ -146,27 +169,33 @@ export const Cart = () => {
                             <span>{course.quantity}</span>
                             <button
                               className="btn"
-                              onClick={() =>
+                              onClick={() => {
+                                console.log(
+                                  `Intentando Sumar la Cantidad del Curso ${course.id}`
+                                );
                                 handleAction(
-                                  "incrementar",
+                                  "Sumar",
                                   course.id,
                                   "cursos",
                                   course.quantity
-                                )
-                              }
+                                );
+                              }}
                               disabled={isIncrementDisabled(course)}
                             >
                               +
                             </button>
                             <button
                               className="btn"
-                              onClick={() =>
+                              onClick={() => {
+                                console.log(
+                                  `Intentando Eliminar el Curso ${course.id} del Carrito.`
+                                );
                                 handleAction(
-                                  "Eliminar este Servicio de tu Carrito",
+                                  "Eliminar Servicio del Carrito",
                                   course.id,
                                   "cursos"
-                                )
-                              }
+                                );
+                              }}
                             >
                               Eliminar
                             </button>
@@ -192,12 +221,15 @@ export const Cart = () => {
                           <p>Hora: {reservation.time}</p>
                           <button
                             className="btn"
-                            onClick={() =>
+                            onClick={() => {
+                              console.log(
+                                `Intentando Cancelar la Reserva ${reservation.id}.`
+                              );
                               handleAction(
-                                "Cancelar la Reserva de tu Turno",
+                                "Cancelar Reserva de Turno",
                                 reservation.id
-                              )
-                            }
+                              );
+                            }}
                           >
                             Cancelar Reserva
                           </button>
@@ -212,13 +244,19 @@ export const Cart = () => {
               <h3>Total: ${cartTotal}</h3>
               <button
                 className="btn"
-                onClick={() => handleAction("Vaciar todo tu Carrito")}
+                onClick={() => {
+                  console.log("Vaciando el Carrito...");
+                  handleAction("Vaciar Carrito");
+                }}
               >
                 Vaciar mi Carrito
               </button>
               <button
                 className="btn"
-                onClick={() => handleAction("Comprar todo tu Carrito")}
+                onClick={() => {
+                  console.log("Procediendo a Comprar el Carrito...");
+                  handleAction("Comprar todo tu Carrito");
+                }}
               >
                 Comprar
               </button>

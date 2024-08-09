@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { ItemCount } from "./ItemCount";
 import { ItemCalendar } from "./ItemCalendar";
@@ -13,7 +13,9 @@ export const ItemDetail = ({ item, onClose }) => {
 
   useEffect(() => {
     if (item) {
+      console.log(`Servicio: ${JSON.stringify(item)}`);
       const cartItem = courses.find((course) => course.id === item.id);
+      console.log(`Servicio en Carrito: ${JSON.stringify(cartItem)}`);
       setStock(cartItem ? item.stock - cartItem.quantity : item.stock);
     }
   }, [item, courses]);
@@ -23,7 +25,12 @@ export const ItemDetail = ({ item, onClose }) => {
   };
 
   const renderItemDetails = useMemo(() => {
-    if (!item) return null;
+    if (!item) {
+      console.log("No hay Detalles para mostrar...");
+      return null;
+    }
+
+    console.log(`Mostrando Detalles para el Servicio: ${JSON.stringify(item)}`);
 
     return (
       <div className="item-info">
@@ -50,9 +57,15 @@ export const ItemDetail = ({ item, onClose }) => {
     );
   }, [item, stock, onClose]);
 
-  const handleGoBack = () => navigate(-1);
+  const handleGoBack = () => {
+    console.log("Volviendo a la Página Anterior...");
+    navigate(-1);
+  };
 
-  if (!item) return <p>Detalles no encontrados...</p>;
+  if (!item) {
+    console.log("Detalles no encontrados...");
+    return <p>Detalles no encontrados...</p>;
+  }
 
   return (
     <>

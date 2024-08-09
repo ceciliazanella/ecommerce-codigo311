@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Card, Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -8,17 +8,26 @@ export const Home = () => {
   const [data, setData] = useState([]);
 
   useEffect(() => {
-    const fetchData = () => {
-      setData([
+    console.log("Iniciando la Carga de Datos...");
+
+    const getData = () => {
+      const getDataBack = [
         { id: 1, title: "Consultoría Astrológica", path: "/consultoria" },
         { id: 2, title: "Cursos On Demand", path: "/cursos" },
-      ]);
+      ];
+      console.log("Datos Obtenidos:", getDataBack);
+      setData(getDataBack);
     };
 
-    const timer = setTimeout(fetchData, 2000);
+    const timer = setTimeout(getData, 2000);
 
-    return () => clearTimeout(timer);
+    return () => {
+      console.log("Limpiando...");
+      clearTimeout(timer);
+    };
   }, []);
+
+  console.log("Estado de Datos:", data);
 
   return (
     <main className="home-main">

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import cartIcon from "../assets/cart.svg";
 import { useCart } from "../context/CartContext";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -13,17 +13,16 @@ export const CartWidget = ({ toggleCart }) => {
       courses?.reduce((acc, item) => acc + item.quantity, 0) || 0;
     const reservationQuantity =
       reservations?.reduce((acc, item) => acc + item.quantity, 0) || 0;
-    return courseQuantity + reservationQuantity;
+    const total = courseQuantity + reservationQuantity;
+
+    console.log(`Cantidad Total Calculada: ${total}`);
+    return total;
   };
 
   useEffect(() => {
     const totalQuantity = calculateTotalQuantity();
     setShowNotification(totalQuantity > 0);
-
-    document.title =
-      totalQuantity > 0
-        ? `(${totalQuantity}) Consultoría Astrológica`
-        : `Código 3.11 | Astrología Evolutiva`;
+    console.log(`Mostrar Notificación: ${totalQuantity > 0}`);
   }, [courses, reservations]);
 
   const totalQuantity = calculateTotalQuantity();
@@ -31,7 +30,10 @@ export const CartWidget = ({ toggleCart }) => {
   return (
     <div
       className="cart-widget"
-      onClick={toggleCart}
+      onClick={() => {
+        console.log("Carrito Abierto.");
+        toggleCart();
+      }}
       role="button"
       aria-label="Abrir Carrito"
     >

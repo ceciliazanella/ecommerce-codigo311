@@ -1,4 +1,4 @@
-import React, { createContext, useState, useEffect, useContext } from "react";
+import { createContext, useState, useEffect, useContext } from "react";
 
 export const CartContext = createContext();
 
@@ -54,14 +54,14 @@ export const CartContextProvider = ({ children }) => {
                 : course
             );
           }
-          console.warn(`Sin stock disponible para ${item.title}.`);
+          console.warn(`Sin Stock Disponible para ${item.title}.`);
         } else if (item.stock >= quantity) {
           return [
             ...prevCourses,
             { ...item, quantity, stock: item.stock - quantity },
           ];
         }
-        console.warn(`Sin stock disponible para ${item.title}.`);
+        console.warn(`Sin Stock Disponible para ${item.title}.`);
         return prevCourses;
       });
     } else if (item.category === "consultoria") {
@@ -79,7 +79,7 @@ export const CartContextProvider = ({ children }) => {
           ];
         }
         console.warn(
-          `Ya existe una reserva para el servicio con ID ${item.id} en ${selectedDate} a las ${selectedTime}.`
+          `Ya existe una Reserva para el Servicio con ID ${item.id} en ${selectedDate} a las ${selectedTime}.`
         );
         return prevReservations;
       });
@@ -114,7 +114,7 @@ export const CartContextProvider = ({ children }) => {
               return { ...course, quantity: newQuantity, stock: stockLeft };
             }
             console.warn(
-              `No hay stock suficiente para actualizar la cantidad de ${course.title}.`
+              `No hay Stock Suficiente para actualizar la Cantidad de ${course.title}.`
             );
           }
           return course;

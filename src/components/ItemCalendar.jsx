@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import DatePicker from "react-datepicker";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
@@ -22,77 +22,101 @@ export const ItemCalendar = ({
   const [isReserved, setIsReserved] = useState(false);
 
   useEffect(() => {
+    console.log("Verificando si el Servicio está reservado...");
     const reserved = isProductInCart(item.id, "consultoria");
+    console.log(`Estado de Reserva de Turno del Servicio: ${reserved}`);
     setIsReserved(reserved);
-    if (reserved) onClose();
+    if (reserved) {
+      console.log("El Servicio está reservado, cerrando el Calendario...");
+      onClose();
+    }
   }, [item.id, isProductInCart, onClose]);
 
   const handleDateChange = (date) => {
+    console.log("Fecha Seleccionada:", date);
     setSelectedDate(date);
     setSelectedTime("");
     setIsConfirmed(false);
   };
 
   const handleTimeChange = (e) => {
+    console.log("Hora Seleccionada:", e.target.value);
     setSelectedTime(e.target.value);
     setIsConfirmed(false);
   };
 
   const handleReserve = () => {
+    console.log(
+      "Intentando realizar Reserva de Turno con Fecha:",
+      selectedDate,
+      "y Hora:",
+      selectedTime
+    );
     if (selectedDate && selectedTime) {
       const formattedDate = format(selectedDate, "dd MMMM yyyy", {
         locale: es,
       });
+      console.log("Fecha Establecida:", formattedDate);
 
       Swal.fire({
         title: "Confirmar Reserva",
-        text: `¿Estás seguro/a que quieres reservar el turno para el ${formattedDate} a las ${selectedTime} para ${item.title}?`,
+        text: `¿Estás seguro/a que querés Reservar Turno para ${item.title} el día ${formattedDate} a las ${selectedTime} hs?`,
         icon: "question",
         showCancelButton: true,
-        confirmButtonText: "Sí, Reservar",
-        cancelButtonText: "Cancelar",
+        confirmButtonText: "Sí, Reservar.",
+        cancelButtonText: "Cancelar!",
       }).then((result) => {
         if (result.isConfirmed) {
+          console.log("Reserva Confirmada.");
           addToCart(item, 1, formattedDate, selectedTime);
           Swal.fire(
-            "Reserva Confirmada",
-            `Tu reserva para ${item.title} está confirmada para el ${formattedDate} a las ${selectedTime}.`,
+            "¡Reserva Confirmada!",
+            `Tu Reserva de Turno para ${item.title} está confirmada para el día ${formattedDate} a las ${selectedTime} hs.`,
             "success"
           );
           setIsReserved(true);
           onReservationConfirmed(formattedDate, selectedTime);
           setSelectedDate(null);
           setSelectedTime("");
+        } else {
+          console.log("Reserva Cancelada por el Usuario.");
         }
       });
     } else {
+      console.log("Fecha u Hora no seleccionada.");
       Swal.fire({
-        title: "Error",
-        text: "Por favor, selecciona una fecha y una hora válidas.",
+        title: "¡Error!",
+        text: "Por favor, seleccioná una Fecha y una Hora válida.",
         icon: "error",
       });
     }
   };
 
   const handleCancelReservation = () => {
+    console.log("Intentando Cancelar la Reserva para el Servicio:", item.title);
     Swal.fire({
-      title: "Confirmar Cancelación",
-      text: `¿Estás seguro/a que quieres cancelar tu reserva para ${item.title}?`,
+      title: "Confirmar Cancelación.",
+      text: `¿Estás seguro/a que querés Cancelar tu Reserva para ${item.title}?`,
       icon: "warning",
       showCancelButton: true,
-      confirmButtonText: "Sí, Cancelar",
-      cancelButtonText: "Cancelar",
+      confirmButtonText: "Sí, Cancelar.",
+      cancelButtonText: "Cancelar!",
     }).then((result) => {
       if (result.isConfirmed) {
+        console.log("Reserva Cancelada.");
         cancelReservation(item.id);
         Swal.fire(
-          "Reserva Cancelada",
-          "Has cancelado tu reserva. Puedes realizar una nueva reserva cuando quieras.",
+          "¡Reserva Cancelada!",
+          "Cancelaste la Reserva de tu Turno. Podés realizar una nueva Reserva cuando quieras!",
           "success"
         );
         setIsReserved(false);
         setSelectedDate(null);
         setSelectedTime("");
+      } else {
+        console.log(
+          "Cancelación de Reserva de Turno realizada por el Usuario."
+        );
       }
     });
   };

@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import { useState, useCallback } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { NavBar } from "./components/NavBar";
 import { ItemListContainer } from "./components/ItemListContainer";
@@ -59,8 +59,10 @@ function App() {
           </Routes>
           {cartVisible && <Cart />}
         </main>
+        <footer>
+          <Footer />
+        </footer>
       </BrowserRouter>
-      <Footer />
     </CartContextProvider>
   );
 }

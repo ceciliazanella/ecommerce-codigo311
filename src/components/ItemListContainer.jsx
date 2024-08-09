@@ -1,19 +1,9 @@
-import React, { useEffect, useState, useCallback } from "react";
+import { useState, useEffect } from "react";
 import { ItemList } from "./ItemList";
 import { useCart } from "../context/CartContext";
+import data from "../data/data.json";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "../styles/ItemListContainer.css";
-
-const itemsFromMock = async () => {
-  await new Promise((resolve) => setTimeout(resolve, 2000));
-  const response = await fetch("/data/mockData.json");
-
-  if (!response.ok) {
-    throw new Error("Error al obtener los datos.");
-  }
-
-  return response.json();
-};
 
 export const ItemListContainer = ({ category }) => {
   const { courses } = useCart();
@@ -21,33 +11,45 @@ export const ItemListContainer = ({ category }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const itemsMock = useCallback(async () => {
-    setLoading(true);
-    setError(null);
-
-    try {
-      const { items: allItems } = await itemsFromMock();
-      const filteredItems = allItems
-        .filter((item) => item.category === category)
-        .map((item) => {
-          const storedItem = courses.find((course) => course.id === item.id);
-          return storedItem
-            ? { ...item, stock: item.stock - storedItem.quantity }
-            : item;
-        });
-
-      setItems(filteredItems);
-    } catch (err) {
-      setError("Error al extraer los datos.");
-      console.error("Error al extraer los datos:", err);
-    } finally {
-      setLoading(false);
-    }
-  }, [category, courses]);
-
   useEffect(() => {
-    itemsMock();
-  }, [itemsMock]);
+    const getData = () => {
+      setLoading(true);
+      setError(null);
+
+      new Promise((resolve, reject) => {
+        setTimeout(() => {
+          try {
+            resolve(data.items);
+          } catch (err) {
+            reject(err);
+          }
+        }, 2000);
+      })
+        .then((allItems) => {
+          const filteredItems = allItems
+            .filter((item) => item.category === category)
+            .map((item) => {
+              const storedItem = courses.find(
+                (course) => course.id === item.id
+              );
+              return storedItem
+                ? { ...item, stock: item.stock - storedItem.quantity }
+                : item;
+            });
+
+          setItems(filteredItems);
+        })
+        .catch((err) => {
+          setError("Error al extraer los Datos.");
+          console.error("Error al extraer los Datos:", err);
+        })
+        .finally(() => {
+          setLoading(false);
+        });
+    };
+
+    getData();
+  }, [category, courses]);
 
   return (
     <div className="item-list-container">
