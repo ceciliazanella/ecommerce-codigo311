@@ -22,7 +22,7 @@ export const Home = () => {
     const timer = setTimeout(getData, 2000);
 
     return () => {
-      console.log("Limpiando...");
+      console.log("Cargando...");
       clearTimeout(timer);
     };
   }, []);
