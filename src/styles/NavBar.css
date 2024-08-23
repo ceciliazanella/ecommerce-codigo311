@@ -95,6 +95,35 @@
 }
 
 
+/* ANIMACIÓN PARA USER */
+.navbar-user-name {
+    margin-left: 0.5rem;
+    margin-right: 0.5rem;
+
+    color: #Cc9933;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+
+    animation: colorChange 1.5s infinite alternate;
+
+    transition: none;
+}
+
+.navbar-user-name:hover {
+    color: inherit;
+    text-decoration: none;
+
+    cursor: url('/public/assets/hand-wave.png'), auto;
+}
+
+.nav-link-close {
+    margin-right: 0.5rem;
+    color: #274156;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+}
+
+
 /* MQ */
 @media (min-width: 760px) {
     .navbar-custom {

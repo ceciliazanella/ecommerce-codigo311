@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
+import { db } from "../firebase/config";
+import { doc, getDoc } from "firebase/firestore";
 import { ItemDetail } from "./ItemDetail";
-import data from "../data/data.json";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "../styles/ItemDetailContainer.css";
 
@@ -12,26 +13,21 @@ export const ItemDetailContainer = () => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    new Promise((resolve, reject) => {
-      setTimeout(() => {
-        try {
-          resolve(data.items);
-        } catch (err) {
-          reject(err);
-        }
-      }, 2000);
-    })
-      .then((items) => {
-        const foundItem = items.find((item) => item.id === Number(id));
-        if (foundItem) {
-          setItem(foundItem);
+    setLoading(true);
+    setError(null);
+
+    const itemRef = doc(db, "ItemCollectionI", id);
+
+    getDoc(itemRef)
+      .then((itemDetail) => {
+        if (itemDetail.exists()) {
+          setItem({ ...itemDetail.data(), id: itemDetail.id });
         } else {
-          setError("No se encontró el Detalle buscado.");
+          setError("No se Encontró el Detalle del Ítem Buscado...");
         }
       })
-      .catch((err) => {
-        setError("Error al buscar Detalles.");
-        console.error("Error al buscar Detalles:", err);
+      .catch(() => {
+        setError("Error al Buscar los Detalles del Ítem...");
       })
       .finally(() => {
         setLoading(false);

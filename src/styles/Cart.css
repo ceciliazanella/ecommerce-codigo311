@@ -32,7 +32,7 @@
   color: #36213E;
 }
 
-.cart-content h2 {
+.cart-content h1 {
   color: #36213E;
   font-size: 1.8rem;
   font-weight: 700;
@@ -41,32 +41,43 @@
   letter-spacing: 0.5rem;
 }
 
-.cart-content h3 {
-  margin-top: 2rem;
+.cart-content h2 {
+  margin: 2rem 0 0 0;
 
   font-family: "Caveat";
   color: #60495A;
-  font-size: 1.7rem;
+  font-size: 1.8rem;
   font-weight: 600;
 }
 
-.cart-content h4 {
-  margin-top: 2rem;
+.cart-content h3 {
+  margin: 2rem 0 1rem 0;
 
   font-family: "Montserrat";
+  text-shadow: 0 0 1.2px #000000;
   color: #1C6E8C;
   font-size: 1.4rem;
   font-weight: 700;
   text-transform: uppercase;
 }
 
-.cart-content h5 {
-  margin: 1rem 0 2rem 0;
+.cart-content h4 {
+  margin: 0;
 
   font-family: "Montserrat";
   color: #274156;
   font-size: 1.1rem;
-  font-weight: 800;
+  font-weight: 700;
+}
+
+.cart-content p {
+  margin: 2rem 0 0 0;
+
+  font-family: "Montserrat";
+  color: #274156;
+  font-size: 1.1rem;
+  font-weight: 700;
+  font-style: italic;
 }
 
 .cart-content .btn {
@@ -139,12 +150,11 @@
   font-size: 1rem;
   font-weight: 600;
   text-transform: capitalize;
+  font-style: italic;
   line-height: 0.3rem;
 }
 
 .item-count-cart {
-  margin-top: 2rem;
-
   display: flex;
 
   align-items: center;
@@ -174,13 +184,15 @@
 
 .item-count-cart .btn,
 .cart-item-details .btn {
+  margin: 1rem 0;
+  padding: 1rem;
   background-color: #907F9F;
   border: 2px solid #D0CCD0;
   box-shadow: 1px 1px 1.5px #000000;
 
   color: #D0CCD0;
   font-family: "Montserrat";
-  font-size: 0.8rem;
+  font-size: 1rem;
   font-weight: 600;
   text-shadow: 0 0.5px 1px #000000;
 
@@ -217,9 +229,11 @@
 
   color: #36213E;
   font-family: "Montserrat";
+  text-shadow: 0 0 1.5px #000000;
   font-size: 1.4rem;
-  font-weight: 800;
+  font-weight: 600;
   text-align: left;
+  text-transform: none;
 }
 
 .cart-icon {

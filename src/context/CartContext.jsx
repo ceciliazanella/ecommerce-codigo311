@@ -1,4 +1,4 @@
-import { createContext, useState, useEffect, useContext } from "react";
+import React, { createContext, useState, useEffect, useContext } from "react";
 
 export const CartContext = createContext();
 
@@ -6,6 +6,8 @@ export const CartContextProvider = ({ children }) => {
   const [courses, setCourses] = useState([]);
   const [reservations, setReservations] = useState([]);
   const [isConfirmed, setIsConfirmed] = useState(false);
+  const [cartQuantity, setCartQuantity] = useState(0);
+  const [cartVisible, setCartVisible] = useState(false);
 
   useEffect(() => {
     const storedCourses = JSON.parse(localStorage.getItem("courses")) || [];
@@ -13,30 +15,39 @@ export const CartContextProvider = ({ children }) => {
       JSON.parse(localStorage.getItem("reservations")) || [];
     setCourses(storedCourses);
     setReservations(storedReservations);
+    updateCartQuantity();
   }, []);
 
   useEffect(() => {
     localStorage.setItem("courses", JSON.stringify(courses));
     localStorage.setItem("reservations", JSON.stringify(reservations));
+    updateCartQuantity();
   }, [courses, reservations]);
+
+  const updateCartQuantity = () => {
+    const totalQuantity =
+      courses.reduce((sum, course) => sum + course.quantity, 0) +
+      reservations.reduce((sum, reservation) => sum + reservation.quantity, 0);
+    setCartQuantity(totalQuantity);
+  };
 
   const isTimeReserved = (date, time) =>
     reservations.some(
       (reservation) => reservation.date === date && reservation.time === time
     );
 
-  const isProductInCart = (id, category) => {
-    if (category === "cursos") {
+  const isProductInCart = (id, categoryId) => {
+    if (categoryId === "cursos") {
       return courses.some((course) => course.id === id);
     }
-    if (category === "consultoria") {
+    if (categoryId === "consultoria") {
       return reservations.some((reservation) => reservation.id === id);
     }
     return false;
   };
 
   const addToCart = (item, quantity, selectedDate, selectedTime) => {
-    if (item.category === "cursos") {
+    if (item.categoryId === "cursos") {
       setCourses((prevCourses) => {
         const existingCourse = prevCourses.find(
           (course) => course.id === item.id
@@ -54,17 +65,15 @@ export const CartContextProvider = ({ children }) => {
                 : course
             );
           }
-          console.warn(`Sin Stock Disponible para ${item.title}.`);
         } else if (item.stock >= quantity) {
           return [
             ...prevCourses,
             { ...item, quantity, stock: item.stock - quantity },
           ];
         }
-        console.warn(`Sin Stock Disponible para ${item.title}.`);
         return prevCourses;
       });
-    } else if (item.category === "consultoria") {
+    } else if (item.categoryId === "consultoria") {
       setReservations((prevReservations) => {
         const exists = prevReservations.some(
           (reservation) =>
@@ -78,9 +87,6 @@ export const CartContextProvider = ({ children }) => {
             { ...item, date: selectedDate, time: selectedTime, quantity },
           ];
         }
-        console.warn(
-          `Ya existe una Reserva para el Servicio con ID ${item.id} en ${selectedDate} a las ${selectedTime}.`
-        );
         return prevReservations;
       });
     }
@@ -113,9 +119,6 @@ export const CartContextProvider = ({ children }) => {
             if (stockLeft >= 0) {
               return { ...course, quantity: newQuantity, stock: stockLeft };
             }
-            console.warn(
-              `No hay Stock Suficiente para actualizar la Cantidad de ${course.title}.`
-            );
           }
           return course;
         })
@@ -139,11 +142,17 @@ export const CartContextProvider = ({ children }) => {
     localStorage.removeItem("reservations");
   };
 
+  const toggleCartVisibility = () => {
+    setCartVisible((prevVisible) => !prevVisible);
+  };
+
   const contextValues = {
     courses,
     reservations,
     isConfirmed,
     setIsConfirmed,
+    cartQuantity,
+    cartVisible,
     addToCart,
     cancelReservation,
     clear,
@@ -154,6 +163,7 @@ export const CartContextProvider = ({ children }) => {
     isTimeReserved,
     removeItem,
     updateCartItem,
+    toggleCartVisibility,
   };
 
   return (

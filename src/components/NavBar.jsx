@@ -1,90 +1,103 @@
-import { useState, useCallback } from "react";
-import { CartWidget } from "./CartWidget";
+import { NavLink } from "react-router-dom";
+import { useCart } from "../context/CartContext";
+import { useAuth } from "../context/AuthContext";
 import { Navbar, Nav, NavDropdown } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar, faBolt } from "@fortawesome/free-solid-svg-icons";
-import { Link } from "react-router-dom";
-import { useCart } from "../context/CartContext";
+import { CartWidget } from "./CartWidget";
 import logo from "../assets/logo.svg";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "../styles/NavBar.css";
 
 export const NavBar = ({ toggleCart }) => {
-  const [activeLink, setActiveLink] = useState("");
   const { courses } = useCart();
+  const { session, logout } = useAuth();
 
   const cartCount = courses.reduce((acc, course) => acc + course.quantity, 0);
-
-  const handleNavLinkClick = useCallback((link) => {
-    setActiveLink(link);
-  }, []);
-
-  const navLinkClass = (linkName) =>
-    `nav-link ${activeLink === linkName ? "active" : ""}`;
 
   return (
     <header>
       <Navbar expand="lg" className="navbar-custom">
         <Navbar.Brand>
-          <Link to="/">
+          <NavLink to="/">
             <img
               src={logo}
               alt="Logo de Código 3.11 Astrología Evolutiva"
               className="navbar-logo"
             />
-          </Link>
+          </NavLink>
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav" className="justify-content-end">
           <Nav className="ml-auto align-items-center">
             <Nav.Link
-              as={Link}
+              as={NavLink}
               to="/"
-              className={navLinkClass("Home")}
-              onClick={() => handleNavLinkClick("Home")}
+              className={({ isActive }) =>
+                `nav-link ${isActive ? "active" : ""}`
+              }
             >
               Home
             </Nav.Link>
             <NavDropdown
               title="Servicios"
               id="basic-nav-dropdown"
-              className={navLinkClass("Servicios")}
+              className={({ isActive }) =>
+                `nav-link ${isActive ? "active" : ""}`
+              }
             >
               <NavDropdown.Item
-                as={Link}
-                to="/consultoria"
-                className={navLinkClass("Consultoría Astrológica")}
-                onClick={() => handleNavLinkClick("Consultoría Astrológica")}
+                as={NavLink}
+                to="category/consultoria"
+                className={({ isActive }) =>
+                  `nav-link ${isActive ? "active" : ""}`
+                }
               >
                 Consultoría Astrológica
               </NavDropdown.Item>
               <NavDropdown.Item
-                as={Link}
-                to="/cursos"
-                className={navLinkClass("Cursos On Demand")}
-                onClick={() => handleNavLinkClick("Cursos On Demand")}
+                as={NavLink}
+                to="category/cursos"
+                className={({ isActive }) =>
+                  `nav-link ${isActive ? "active" : ""}`
+                }
               >
                 Cursos On Demand
               </NavDropdown.Item>
             </NavDropdown>
-            <Nav.Link
-              as={Link}
-              to="/create-account"
-              className={navLinkClass("Crear Cuenta")}
-              onClick={() => handleNavLinkClick("Crear Cuenta")}
-            >
-              Crear Cuenta
-              <FontAwesomeIcon icon={faStar} className="star-icon" />
-            </Nav.Link>
-            <Nav.Link
-              as={Link}
-              to="/login"
-              className={navLinkClass("Ingresar")}
-              onClick={() => handleNavLinkClick("Ingresar")}
-            >
-              Ingresar
-              <FontAwesomeIcon icon={faBolt} className="bolt-icon" />
-            </Nav.Link>
+            {session ? (
+              <>
+                <Nav.Link className="navbar-user-name">
+                  ¡Hola, {session.nombre}!
+                </Nav.Link>
+                <Nav.Link onClick={logout} className="nav-link-close">
+                  Cerrar mi Sesión
+                </Nav.Link>
+              </>
+            ) : (
+              <>
+                <Nav.Link
+                  as={NavLink}
+                  to="/crearcuenta"
+                  className={({ isActive }) =>
+                    `nav-link ${isActive ? "active" : ""}`
+                  }
+                >
+                  Crear Cuenta
+                  <FontAwesomeIcon icon={faStar} className="star-icon" />
+                </Nav.Link>
+                <Nav.Link
+                  as={NavLink}
+                  to="/ingresar"
+                  className={({ isActive }) =>
+                    `nav-link ${isActive ? "active" : ""}`
+                  }
+                >
+                  Ingresar
+                  <FontAwesomeIcon icon={faBolt} className="bolt-icon" />
+                </Nav.Link>
+              </>
+            )}
             <CartWidget count={cartCount} toggleCart={toggleCart} />
           </Nav>
         </Navbar.Collapse>

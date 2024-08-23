@@ -24,7 +24,7 @@
 
 .home-card {
     width: 260px;
-    height: 200px;
+    height: 180px;
     padding: 2rem;
     background-color: #63768D;
     border: solid 2px #D0CCD0;
@@ -64,6 +64,7 @@
     color: #D0CCD0;
     text-transform: none;
     font-weight: 600;
+    line-height: 1.8rem;
     text-align: center;
 }
 
@@ -73,7 +74,7 @@
 
     color: #36213E;
     font-size: 0.8rem;
-    font-weight: 600;
+    font-weight: 400;
 }
 
 

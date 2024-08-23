@@ -1,14 +1,18 @@
 import { useState, useEffect } from "react";
+import { useCart } from "../context/CartContext";
 import DatePicker from "react-datepicker";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
-import { useCart } from "../context/CartContext";
-import Swal from "sweetalert2";
+import { Modal, Button } from "react-bootstrap";
 import "react-datepicker/dist/react-datepicker.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "../styles/ItemCalendar.css";
 
 const isWeekend = (date) => [0, 6].includes(date.getDay());
+const HOURS = Array.from({ length: 5 }, (_, i) => 9 + i * 2).map(
+  (hour) => `${hour}:00`
+);
+const DATE_FORMAT = "dd MMMM yyyy";
 
 export const ItemCalendar = ({
   item,
@@ -20,106 +24,80 @@ export const ItemCalendar = ({
   const [selectedDate, setSelectedDate] = useState(null);
   const [selectedTime, setSelectedTime] = useState("");
   const [isReserved, setIsReserved] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+  const [modalContent, setModalContent] = useState({});
 
   useEffect(() => {
-    console.log("Verificando si el Servicio está reservado...");
     const reserved = isProductInCart(item.id, "consultoria");
-    console.log(`Estado de Reserva de Turno del Servicio: ${reserved}`);
     setIsReserved(reserved);
-    if (reserved) {
-      console.log("El Servicio está reservado, cerrando el Calendario...");
-      onClose();
-    }
+    if (reserved) onClose();
   }, [item.id, isProductInCart, onClose]);
 
   const handleDateChange = (date) => {
-    console.log("Fecha Seleccionada:", date);
     setSelectedDate(date);
     setSelectedTime("");
     setIsConfirmed(false);
   };
 
   const handleTimeChange = (e) => {
-    console.log("Hora Seleccionada:", e.target.value);
     setSelectedTime(e.target.value);
     setIsConfirmed(false);
   };
 
   const handleReserve = () => {
-    console.log(
-      "Intentando realizar Reserva de Turno con Fecha:",
-      selectedDate,
-      "y Hora:",
-      selectedTime
-    );
     if (selectedDate && selectedTime) {
-      const formattedDate = format(selectedDate, "dd MMMM yyyy", {
-        locale: es,
-      });
-      console.log("Fecha Establecida:", formattedDate);
-
-      Swal.fire({
+      const formattedDate = format(selectedDate, DATE_FORMAT, { locale: es });
+      setModalContent({
         title: "Confirmar Reserva",
-        text: `¿Estás seguro/a que querés Reservar Turno para ${item.title} el día ${formattedDate} a las ${selectedTime} hs?`,
-        icon: "question",
-        showCancelButton: true,
-        confirmButtonText: "Sí, Reservar.",
-        cancelButtonText: "Cancelar!",
-      }).then((result) => {
-        if (result.isConfirmed) {
-          console.log("Reserva Confirmada.");
+        text: `¿Estás seguro/a que querés Reservar Turno para ${item.title} el Día ${formattedDate} a las ${selectedTime} hs?`,
+        confirmText: "Reservar",
+        cancelText: "Cancelar",
+        onConfirm: () => {
           addToCart(item, 1, formattedDate, selectedTime);
-          Swal.fire(
-            "¡Reserva Confirmada!",
-            `Tu Reserva de Turno para ${item.title} está confirmada para el día ${formattedDate} a las ${selectedTime} hs.`,
-            "success"
-          );
+          setModalContent({
+            title: "¡Reserva Confirmada!",
+            text: `Tu Reserva para ${item.title} está Confirmada para el Día ${formattedDate} a las ${selectedTime} hs.`,
+            confirmText: "Cerrar",
+          });
           setIsReserved(true);
           onReservationConfirmed(formattedDate, selectedTime);
           setSelectedDate(null);
           setSelectedTime("");
-        } else {
-          console.log("Reserva Cancelada por el Usuario.");
-        }
+        },
       });
+      setShowModal(true);
     } else {
-      console.log("Fecha u Hora no seleccionada.");
-      Swal.fire({
-        title: "¡Error!",
-        text: "Por favor, seleccioná una Fecha y una Hora válida.",
-        icon: "error",
+      setModalContent({
+        title: "Mmm...",
+        text: "Por favor, ¡Seleccioná una Fecha y una Hora válida!",
+        confirmText: "Cerrar",
       });
+      setShowModal(true);
     }
   };
 
   const handleCancelReservation = () => {
-    console.log("Intentando Cancelar la Reserva para el Servicio:", item.title);
-    Swal.fire({
-      title: "Confirmar Cancelación.",
+    setModalContent({
+      title: "Confirmar Cancelación",
       text: `¿Estás seguro/a que querés Cancelar tu Reserva para ${item.title}?`,
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonText: "Sí, Cancelar.",
-      cancelButtonText: "Cancelar!",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        console.log("Reserva Cancelada.");
+      confirmText: "Confirmar Cancelación",
+      cancelText: "Cancelar",
+      onConfirm: () => {
         cancelReservation(item.id);
-        Swal.fire(
-          "¡Reserva Cancelada!",
-          "Cancelaste la Reserva de tu Turno. Podés realizar una nueva Reserva cuando quieras!",
-          "success"
-        );
+        setModalContent({
+          title: "¡Reserva Cancelada!",
+          text: "Cancelaste la Reserva de tu Turno... ¡Podés realizar una Nueva Reserva cuando quieras!",
+          confirmText: "Cerrar",
+        });
         setIsReserved(false);
         setSelectedDate(null);
         setSelectedTime("");
-      } else {
-        console.log(
-          "Cancelación de Reserva de Turno realizada por el Usuario."
-        );
-      }
+      },
     });
+    setShowModal(true);
   };
+
+  const handleModalClose = () => setShowModal(false);
 
   return (
     <div className="item-calendar">
@@ -145,26 +123,52 @@ export const ItemCalendar = ({
             disabled={isReserved}
           >
             <option value="">Seleccionar Hora</option>
-            {Array.from({ length: 5 }, (_, i) => 9 + i * 2).map((hour) => (
-              <option key={hour} value={`${hour}:00`}>{`${hour}:00`}</option>
+            {HOURS.map((hour) => (
+              <option key={hour} value={hour}>
+                {hour}
+              </option>
             ))}
           </select>
         </label>
         {isReserved && (
-          <button className="btn btn-danger" onClick={handleCancelReservation}>
+          <Button variant="danger" onClick={handleCancelReservation}>
             Cancelar Reserva
-          </button>
+          </Button>
         )}
-        <button
-          className={`btn ${
-            isReserved ? "btn-success" : "btn-primary"
-          } reserve-button`}
+        <Button
+          variant={isReserved ? "success" : "primary"}
+          className="reserve-button"
           onClick={handleReserve}
           disabled={isReserved}
         >
-          {isReserved ? "Reserva Confirmada" : "Confirmar Reserva"}
-        </button>
+          {isReserved ? "¡Reserva Confirmada!" : "Confirmar Reserva"}
+        </Button>
       </div>
+
+      <Modal show={showModal} onHide={handleModalClose} centered>
+        <Modal.Header closeButton>
+          <Modal.Title>{modalContent.title}</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>{modalContent.text}</Modal.Body>
+        <Modal.Footer>
+          {modalContent.confirmText && (
+            <Button
+              variant="primary"
+              onClick={() => {
+                modalContent.onConfirm && modalContent.onConfirm();
+                handleModalClose();
+              }}
+            >
+              {modalContent.confirmText}
+            </Button>
+          )}
+          {modalContent.cancelText && (
+            <Button variant="secondary" onClick={handleModalClose}>
+              {modalContent.cancelText}
+            </Button>
+          )}
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 };

@@ -115,6 +115,18 @@ main h1 {
   }
 }
 
+@keyframes colorChange {
+  from {
+    transform: scale(0.8);
+    color: #8D5A97;
+  }
+
+  to {
+    transform: scale(1.2);
+    color: #8AC6D0;
+  }
+}
+
 @keyframes shake-vertical {
   0% {
     transform: translateY(0);
@@ -160,90 +172,61 @@ main h1 {
 }
 
 
-/*SWAL*/
-.swal2-popup {
+/* MODAL */
+.modal-content {
+  box-shadow: 0 0 10px#36213E;
+}
+
+.modal-content .modal-header {
+  background-color: #63768D;
+
+  color: #D0CCD0;
+  text-shadow: 0 1px 2px #000000;
+  font-weight: 800;
+  font-size: 1.5rem;
+}
+
+.modal-content .modal-header .btn-close {
+  color: #D0CCD0;
+  font-weight: 800;
+  font-size: 1.5rem;
+}
+
+.modal-content .modal-body {
   background-color: #D0CCD0;
-  border-radius: 4rem 1rem 4rem 1rem;
-  box-shadow: 0 0 10px #274156;
-}
 
-.swal2-popup .swal2-title {
-  font-family: "Caveat";
-  color: #60495A;
-  font-size: 2.6rem;
-  font-weight: 700;
-}
-
-.swal2-popup .swal2-html-container {
-  font-family: "Montserrat";
-  color: #1C6E8C;
-  font-size: 1.2rem;
+  color: #36213E;
   font-weight: 600;
+  font-size: 1rem;
 }
 
-.swal2-popup .swal2-icon {
-  border-color: #60495A;
-  box-shadow: 1px 1px 2px#000000;
+.modal-content .modal-footer {
+  padding: 1rem;
+  background-color: #D0CCD0;
 
-  filter: drop-shadow(1px 1px 2px#000000);
+  display: flex;
+  flex-direction: row;
+
+  align-items: center;
+  justify-content: center;
+
+  gap: 2rem;
 }
 
-.swal2-popup .swal2-icon-content {
-  color: #1C6E8C;
+.modal-content .modal-footer button {
+  margin: 1rem;
+  padding: 1rem;
+  box-shadow: 2px 1px 5px #000000;
+
+  font-weight: 800;
 }
 
-.swal2-actions {
-  font-family: "Montserrat";
-  color: #D0CCD0;
-  font-size: 1.3rem;
-  font-weight: 600;
-  text-shadow: 0 0 1px #000000;
-
-  transition: all 0.6s ease-in-out;
+.modal-content .modal-footer button:hover {
+  box-shadow: none;
 }
 
-.swal2-confirm {
+.modal-content .modal-footer .btn-secondary {
   background-color: #907F9F;
-  box-shadow: 0 0 10px #Cc9933;
-  border-radius: 2.5rem 1rem;
-
-  color: #D0CCD0;
-  font-size: 1rem;
-  text-shadow: 1px 1px 3px #000000;
-
-  transition: all 0.8s ease-in-out;
-}
-
-.swal2-confirm:hover {
-  background-color: #36213E;
-  box-shadow: 1px 1px 2px #000000;
-
-  color: #Cc9933;
-
-  transition: all 0.3s ease-out;
-  transform: scale(1.2);
-}
-
-.swal2-cancel {
-  background-color: #63768d;
-  box-shadow: 0 0 10px #Cc9933;
-  border-radius: 2.5rem 1rem;
-
-  color: #D0CCD0;
-  font-size: 1rem;
-  text-shadow: 1px 1px 3px #000000;
-
-  transition: all 0.8s ease-in;
-}
-
-.swal2-cancel:hover {
-  background-color: #274156;
-  box-shadow: 1px 1px 2px #000000;
-
-  color: #Cc9933;
-
-  transition: all 0.3s ease-out;
-  transform: scale(1.2);
 }
 
 

@@ -11,10 +11,12 @@ export const Footer = () => {
         <div className="footer-text">
           <p>
             Creo en la astrología como herramienta de cambio y aprendizaje entre
-            las personas, como un medio de profunda transformación. Mi fin es
-            crear un portal de autoconocimiento a través de un lenguaje que nos
-            permita conectarnos con una realidad más sutil; desplegando el alma
-            hacia la sabiduría y sus múltiples formas.
+            las personas, como un medio de profunda transformación.
+          </p>
+          <p>
+            Mi fin es crear un portal de autoconocimiento a través de un
+            lenguaje que nos permita conectarnos con una realidad más sutil;
+            desplegando el alma hacia la sabiduría y sus múltiples formas.
           </p>
           <span className="bold-text">© Cecilia Zanella 2023</span>
         </div>
