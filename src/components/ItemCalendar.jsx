@@ -19,8 +19,7 @@ export const ItemCalendar = ({
   onClose = () => {},
   onReservationConfirmed = () => {},
 }) => {
-  const { addToCart, isProductInCart, cancelReservation, setIsConfirmed } =
-    useCart();
+  const { addToCart, isProductInCart, cancelReservation } = useCart();
   const [selectedDate, setSelectedDate] = useState(null);
   const [selectedTime, setSelectedTime] = useState("");
   const [isReserved, setIsReserved] = useState(false);
@@ -36,12 +35,10 @@ export const ItemCalendar = ({
   const handleDateChange = (date) => {
     setSelectedDate(date);
     setSelectedTime("");
-    setIsConfirmed(false);
   };
 
   const handleTimeChange = (e) => {
     setSelectedTime(e.target.value);
-    setIsConfirmed(false);
   };
 
   const handleReserve = () => {
@@ -54,15 +51,9 @@ export const ItemCalendar = ({
         cancelText: "Cancelar",
         onConfirm: () => {
           addToCart(item, 1, formattedDate, selectedTime);
-          setModalContent({
-            title: "¡Reserva Confirmada!",
-            text: `Tu Reserva para ${item.title} está Confirmada para el Día ${formattedDate} a las ${selectedTime} hs.`,
-            confirmText: "Cerrar",
-          });
           setIsReserved(true);
           onReservationConfirmed(formattedDate, selectedTime);
-          setSelectedDate(null);
-          setSelectedTime("");
+          resetForm();
         },
       });
       setShowModal(true);
@@ -84,17 +75,16 @@ export const ItemCalendar = ({
       cancelText: "Cancelar",
       onConfirm: () => {
         cancelReservation(item.id);
-        setModalContent({
-          title: "¡Reserva Cancelada!",
-          text: "Cancelaste la Reserva de tu Turno... ¡Podés realizar una Nueva Reserva cuando quieras!",
-          confirmText: "Cerrar",
-        });
         setIsReserved(false);
-        setSelectedDate(null);
-        setSelectedTime("");
+        resetForm();
       },
     });
     setShowModal(true);
+  };
+
+  const resetForm = () => {
+    setSelectedDate(null);
+    setSelectedTime("");
   };
 
   const handleModalClose = () => setShowModal(false);
@@ -130,19 +120,19 @@ export const ItemCalendar = ({
             ))}
           </select>
         </label>
-        {isReserved && (
+        {isReserved ? (
           <Button variant="danger" onClick={handleCancelReservation}>
             Cancelar Reserva
           </Button>
+        ) : (
+          <Button
+            variant="primary"
+            className="reserve-button"
+            onClick={handleReserve}
+          >
+            Confirmar Reserva
+          </Button>
         )}
-        <Button
-          variant={isReserved ? "success" : "primary"}
-          className="reserve-button"
-          onClick={handleReserve}
-          disabled={isReserved}
-        >
-          {isReserved ? "¡Reserva Confirmada!" : "Confirmar Reserva"}
-        </Button>
       </div>
 
       <Modal show={showModal} onHide={handleModalClose} centered>
@@ -155,7 +145,9 @@ export const ItemCalendar = ({
             <Button
               variant="primary"
               onClick={() => {
-                modalContent.onConfirm && modalContent.onConfirm();
+                if (modalContent.onConfirm) {
+                  modalContent.onConfirm();
+                }
                 handleModalClose();
               }}
             >

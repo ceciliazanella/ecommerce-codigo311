@@ -88,3 +88,7 @@ input:focus {
 .input-group .password-input {
   padding-right: 2.5rem;
 }
+
+.vibrate-button:hover {
+  animation: vibrate 0.3s ease-in-out;
+}

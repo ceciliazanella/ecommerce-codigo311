@@ -72,7 +72,7 @@ main h1 {
   position: relative;
 
   color: #D0CCD0;
-  text-transform: uppercase;
+  text-transform: capitalize;
   text-shadow: 1px 1px 1px #000000;
 
   transition: background-color 1s, border-color 1s, color 1s ease-in;
@@ -84,6 +84,7 @@ main h1 {
   box-shadow: -2px -2px 2px #0000006c;
 
   color: #D0CCD0;
+  text-transform: uppercase;
 
   transition: background-color 0.5s, border-color 0.5s, color 0.5s ease-out;
   animation: shake-vertical 0.3s;
@@ -155,7 +156,7 @@ main h1 {
   }
 
   25% {
-    transform: translateX(-2px);
+    transform: translateX(-5px);
   }
 
   50% {
@@ -163,7 +164,7 @@ main h1 {
   }
 
   75% {
-    transform: translateX(-2px);
+    transform: translateX(-5px);
   }
 
   100% {

@@ -15,7 +15,9 @@ Esta Aplicación permite a los Usuarios registrarse, reservar Consultas Astroló
 - **Firebase**: Para la Autenticación, Almacenamiento de Datos en Firestore y Manejo de Pedidos.
 - **React Context API**: Para el Manejo del Estado Global (Carrito y Autenticación).
 - **Bootstrap**: Para Estilos y Diseño Responsivo.
-- **React DatePicker**: Para la Selección de Fechas en los Formularios de Reserva.
+- **React DatePicker**: Componente para la Selección de Fechas en los Formularios de Reserva.
+- **Material-UI (MUI)**: Biblioteca de componentes de React que proporciona un conjunto de Componentes predefinidos que siguen las directrices de Material Design. Utilizado para mejorar la Apariencia y la Funcionalidad de la interfaz de Usuario.
+- **Formik**: Biblioteca para el Manejo de Formularios en React. Simplifica la Gestión del Estado del Formulario, la Validación y el Manejo de Envíos.
 
 
 

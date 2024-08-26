@@ -1,6 +1,7 @@
   .checkout-card {
     padding: 6rem 3rem;
-    background-color: #D0CCD0;
+    background-color: #ffff;
+    border: solid 2px #D0CCD0;
     box-shadow: 1px 2px 6px #274156;
     border-radius: 1.5rem 3rem 6rem 3rem;
 
@@ -15,9 +16,9 @@
     text-align: center;
   }
 
-  .checkout-card-title {
+  .checkout-card h1 {
     padding: 0;
-    margin: 0 0 2rem 0;
+    margin: 2rem 0;
 
     font-family: "Montserrat";
     font-size: 2rem;
@@ -38,38 +39,42 @@
   }
 
   .checkout-card h3 {
+    margin: 0 0 1rem 0;
+
     font-family: "Montserrat";
     font-size: 1.2rem;
     color: #1C6E8C;
   }
 
-  .checkout-card p {
-    margin: 1rem 0 0 0;
+  .checkout-card h4 {
+    margin: 4rem 0 2rem 0;
 
+    font-family: "Montserrat";
+    font-size: 1.5rem;
+    color: #1C6E8C;
+    text-shadow: 1px 1px 2px #000000;
+    font-weight: 700;
+    font-style: italic;
+  }
+
+  .checkout-card h6 {
     font-family: "Montserrat";
     font-size: 1rem;
     color: #1C6E8C;
-    font-weight: 600;
+    font-weight: 700;
     font-style: italic;
   }
 
   .checkout-item {
-    border-bottom: 1px solid #D0CCD0;
-    padding-bottom: 10px;
+    width: 100%;
+    padding: 0 0 2rem 0;
+    border-bottom: 2px solid #1C6E8C;
+    border-radius: 10% 20%;
   }
 
-  .checkout-total h2 {
-    margin: 2rem 0 0 0;
+  .checkout-item h3 {
+    margin: 0 0 1rem 0;
 
-    font-family: "Montserrat";
-    text-shadow: 0 0 1.5px #000000;
-    font-size: 1.6rem;
-    font-weight: 700;
-    color: #274156;
-    font-style: normal;
-  }
-
-  .checkout-total h3 {
     font-family: "Montserrat";
     text-shadow: 0 0 1.8px #000000;
     font-size: 1.6rem;
@@ -78,14 +83,16 @@
     font-style: normal;
   }
 
-  .checkout-total p {
-    margin: 0 0 2rem 0;
+  .checkout-item p {
+    margin-bottom: 0.8rem;
 
     font-family: "Montserrat";
-    font-size: 1.4rem;
-    color: #1C6E8C;
-    font-style: italic;
-    font-weight: 800;
+    font-size: 1.1rem;
+    font-weight: 600;
+    font-style: normal;
+    color: #907F9F;
+    line-height: 0.8rem;
+    text-transform: capitalize;
   }
 
   .titulo h2 {
@@ -97,7 +104,7 @@
   }
 
   .titulo h3 {
-    margin: 0.5rem 0;
+    margin: 0 0 1.5rem 0;
 
     font-family: "Montserrat";
     text-shadow: 0 0 1.5px #000000;
@@ -113,18 +120,6 @@
     font-weight: 800;
     color: #63768D;
     text-transform: uppercase;
-  }
-
-  .titulo p {
-    margin-bottom: 0.8rem;
-
-    font-family: "Montserrat";
-    font-size: 1.1rem;
-    font-weight: 600;
-    font-style: normal;
-    color: #907F9F;
-    line-height: 0.8rem;
-    text-transform: capitalize;
   }
 
   .password-container {

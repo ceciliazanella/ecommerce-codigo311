@@ -12,37 +12,43 @@ import { Checkout } from "./components/Checkout";
 import { Home } from "./components/Home";
 import { Footer } from "./components/Footer";
 import { NotFound } from "./components/NotFound";
+import { ThemeProvider } from "@mui/material/styles";
+import { theme } from "../src/theme";
+import CssBaseline from "@mui/material/CssBaseline";
 
 function App() {
   const { cartQuantity, cartVisible, toggleCartVisibility } = useCart();
 
   return (
     <AuthProvider>
-      <CartContextProvider>
-        <BrowserRouter>
-          <header>
-            <NavBar
-              toggleCart={toggleCartVisibility}
-              cartQuantity={cartQuantity}
-            />
-          </header>
-          <main>
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/category/:id" element={<ItemListContainer />} />
-              <Route path="/item/:id" element={<ItemDetailContainer />} />
-              <Route path="/crearcuenta" element={<CrearCuenta />} />
-              <Route path="/ingresar" element={<Ingresar />} />
-              <Route path="/checkout" element={<Checkout />} />
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </main>
-          {cartVisible && <Cart />}
-          <footer>
-            <Footer />
-          </footer>
-        </BrowserRouter>
-      </CartContextProvider>
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <CartContextProvider>
+          <BrowserRouter>
+            <header>
+              <NavBar
+                toggleCart={toggleCartVisibility}
+                cartQuantity={cartQuantity}
+              />
+            </header>
+            <main>
+              <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/category/:id" element={<ItemListContainer />} />
+                <Route path="/item/:id" element={<ItemDetailContainer />} />
+                <Route path="/crearcuenta" element={<CrearCuenta />} />
+                <Route path="/ingresar" element={<Ingresar />} />
+                <Route path="/checkout" element={<Checkout />} />
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </main>
+            {cartVisible && <Cart />}
+            <footer>
+              <Footer />
+            </footer>
+          </BrowserRouter>
+        </CartContextProvider>
+      </ThemeProvider>
     </AuthProvider>
   );
 }

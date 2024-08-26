@@ -8,7 +8,7 @@
 }
 
 .item-title {
-  padding: 4rem 0 2rem 0;
+  padding: 4rem 0;
 
   display: flex;
 
@@ -17,9 +17,9 @@
 
   font-family: "Montserrat";
   color: #1C6E8C;
-  font-size: 1.6rem;
-  letter-spacing: 0.05rem;
-  text-shadow: 0.5px 0.5px 1.2px #000000;
+  font-size: 1.8rem;
+  text-shadow: 1px 1px 1.8px #000000;
+  text-transform: uppercase;
   text-align: center;
 }
 
