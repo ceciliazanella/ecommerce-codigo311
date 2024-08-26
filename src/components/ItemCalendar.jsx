@@ -120,19 +120,19 @@ export const ItemCalendar = ({
             ))}
           </select>
         </label>
-        {isReserved ? (
+        {isReserved && (
           <Button variant="danger" onClick={handleCancelReservation}>
             Cancelar Reserva
           </Button>
-        ) : (
-          <Button
-            variant="primary"
-            className="reserve-button"
-            onClick={handleReserve}
-          >
-            Confirmar Reserva
-          </Button>
         )}
+        <Button
+          variant={isReserved ? "success" : "primary"}
+          className="reserve-button"
+          onClick={handleReserve}
+          disabled={isReserved}
+        >
+          {isReserved ? "¡Reserva Confirmada!" : "Confirmar Reserva"}
+        </Button>
       </div>
 
       <Modal show={showModal} onHide={handleModalClose} centered>

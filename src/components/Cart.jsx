@@ -40,8 +40,8 @@ export const Cart = () => {
     const texts = {
       "Cancelar Reserva de Turno":
         "¿Estás seguro/a que querés Cancelar la Reserva de tu Turno?",
-      "Eliminar Servicio del Carrito":
-        "¿Estás seguro/a que querés Eliminar este Servicio de tu Carrito?",
+      "Eliminar Curso del Carrito":
+        "¿Estás seguro/a que querés Eliminar este Curso de tu Carrito?",
       "Vaciar Carrito": "¿Estás seguro/a que querés Vaciar todo tu Carrito?",
       Sumar:
         "¿Estás seguro/a que querés Agregar una Unidad más de este Curso a tu Pedido?",
@@ -74,7 +74,7 @@ export const Cart = () => {
       case "Cancelar Reserva de Turno":
         cancelReservation(itemId);
         break;
-      case "Eliminar Servicio del Carrito":
+      case "Eliminar Curso del Carrito":
         removeItem(itemId, itemType);
         break;
       case "Vaciar Carrito":
@@ -165,7 +165,7 @@ export const Cart = () => {
                                 variant="danger"
                                 onClick={() =>
                                   handleActionConfirmation(
-                                    "Eliminar Servicio del Carrito",
+                                    "Eliminar Curso del Carrito",
                                     course.id,
                                     "cursos"
                                   )
