@@ -147,10 +147,18 @@ export const Checkout = () => {
     if (isProcessing) return;
 
     setIsProcessing(true);
+
+    const storedUsers = JSON.parse(localStorage.getItem("users")) || [];
+    const currentUser = storedUsers.find(
+      (user) => user.email === session?.email.toLowerCase()
+    );
+
+    const userPhone = currentUser?.telefono || "Sin especificar...";
+
     const orderData = {
       buyer: {
         name: session?.nombre || "Anónimo",
-        phone: "Sin especificar...",
+        phone: userPhone,
         email: session?.email || "Sin especificar...",
       },
       items: {
