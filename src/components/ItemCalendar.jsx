@@ -1,18 +1,17 @@
 import { useState, useEffect } from "react";
+import { Modal, Button } from "react-bootstrap";
 import { useCart } from "../context/CartContext";
 import DatePicker from "react-datepicker";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
-import { Modal, Button } from "react-bootstrap";
 import "react-datepicker/dist/react-datepicker.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "../styles/ItemCalendar.css";
 
-const isWeekend = (date) => [0, 6].includes(date.getDay());
-const HOURS = Array.from({ length: 5 }, (_, i) => 9 + i * 2).map(
+const Hours = Array.from({ length: 5 }, (_, i) => 9 + i * 2).map(
   (hour) => `${hour}:00`
 );
-const DATE_FORMAT = "dd MMMM yyyy";
+const Date_Format = "dd MMMM yyyy";
 
 export const ItemCalendar = ({
   item,
@@ -37,57 +36,63 @@ export const ItemCalendar = ({
     setSelectedTime("");
   };
 
-  const handleTimeChange = (e) => {
-    setSelectedTime(e.target.value);
-  };
+  const handleTimeChange = (e) => setSelectedTime(e.target.value);
 
-  const handleReserve = () => {
-    if (selectedDate && selectedTime) {
-      const formattedDate = format(selectedDate, DATE_FORMAT, { locale: es });
-      setModalContent({
-        title: "Confirmar Reserva",
-        text: `¿Estás seguro/a que querés Reservar Turno para ${item.title} el Día ${formattedDate} a las ${selectedTime} hs?`,
-        confirmText: "Reservar",
-        cancelText: "Cancelar",
-        onConfirm: () => {
-          addToCart(item, 1, formattedDate, selectedTime);
-          setIsReserved(true);
-          onReservationConfirmed(formattedDate, selectedTime);
-          resetForm();
-        },
-      });
-      setShowModal(true);
-    } else {
-      setModalContent({
-        title: "Mmm...",
-        text: "Por favor, ¡Seleccioná una Fecha y una Hora válida!",
-        confirmText: "Cerrar",
-      });
-      setShowModal(true);
-    }
-  };
-
-  const handleCancelReservation = () => {
-    setModalContent({
-      title: "Confirmar Cancelación",
-      text: `¿Estás seguro/a que querés Cancelar tu Reserva para ${item.title}?`,
-      confirmText: "Confirmar Cancelación",
-      cancelText: "Cancelar",
-      onConfirm: () => {
-        cancelReservation(item.id);
-        setIsReserved(false);
-        resetForm();
-      },
-    });
-    setShowModal(true);
-  };
+  const handleModalClose = () => setShowModal(false);
 
   const resetForm = () => {
     setSelectedDate(null);
     setSelectedTime("");
   };
 
-  const handleModalClose = () => setShowModal(false);
+  const showModalWithContent = (
+    title,
+    text,
+    confirmText,
+    cancelText,
+    onConfirm
+  ) => {
+    setModalContent({ title, text, confirmText, cancelText, onConfirm });
+    setShowModal(true);
+  };
+
+  const handleReserve = () => {
+    if (selectedDate && selectedTime) {
+      const formattedDate = format(selectedDate, Date_Format, { locale: es });
+      showModalWithContent(
+        "Confirmar Reserva",
+        `¿Estás seguro/a que querés Reservar Turno para ${item.title} el Día ${formattedDate} a las ${selectedTime} hs?`,
+        "Reservar",
+        "Cancelar",
+        () => {
+          addToCart(item, 1, formattedDate, selectedTime);
+          setIsReserved(true);
+          onReservationConfirmed(formattedDate, selectedTime);
+          resetForm();
+        }
+      );
+    } else {
+      showModalWithContent(
+        "Mmm...",
+        "Por favor, ¡Seleccioná una Fecha y una Hora válida!",
+        "Cerrar"
+      );
+    }
+  };
+
+  const handleCancelReservation = () => {
+    showModalWithContent(
+      "Confirmar Cancelación",
+      `¿Estás seguro/a que querés Cancelar tu Reserva para ${item.title}?`,
+      "Confirmar Cancelación",
+      "Cancelar",
+      () => {
+        cancelReservation(item.id);
+        setIsReserved(false);
+        resetForm();
+      }
+    );
+  };
 
   return (
     <div className="item-calendar">
@@ -98,7 +103,9 @@ export const ItemCalendar = ({
           <DatePicker
             selected={selectedDate}
             onChange={handleDateChange}
-            filterDate={(date) => date > new Date() && !isWeekend(date)}
+            filterDate={(date) =>
+              date > new Date() && ![0, 6].includes(date.getDay())
+            }
             dateFormat="yyyy-MM-dd"
             className="date-picker"
             disabled={isReserved}
@@ -113,7 +120,7 @@ export const ItemCalendar = ({
             disabled={isReserved}
           >
             <option value="">Seleccionar Hora</option>
-            {HOURS.map((hour) => (
+            {Hours.map((hour) => (
               <option key={hour} value={hour}>
                 {hour}
               </option>
@@ -145,9 +152,7 @@ export const ItemCalendar = ({
             <Button
               variant="primary"
               onClick={() => {
-                if (modalContent.onConfirm) {
-                  modalContent.onConfirm();
-                }
+                if (modalContent.onConfirm) modalContent.onConfirm();
                 handleModalClose();
               }}
             >

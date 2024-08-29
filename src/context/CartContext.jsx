@@ -3,33 +3,23 @@ import React, { createContext, useState, useEffect, useContext } from "react";
 export const CartContext = createContext();
 
 export const CartContextProvider = ({ children }) => {
-  const [courses, setCourses] = useState([]);
-  const [reservations, setReservations] = useState([]);
+  const [courses, setCourses] = useState(
+    () => JSON.parse(localStorage.getItem("courses")) || []
+  );
+  const [reservations, setReservations] = useState(
+    () => JSON.parse(localStorage.getItem("reservations")) || []
+  );
   const [isConfirmed, setIsConfirmed] = useState(false);
-  const [cartQuantity, setCartQuantity] = useState(0);
   const [cartVisible, setCartVisible] = useState(false);
-
-  useEffect(() => {
-    const storedCourses = JSON.parse(localStorage.getItem("courses")) || [];
-    const storedReservations =
-      JSON.parse(localStorage.getItem("reservations")) || [];
-    setCourses(storedCourses);
-    setReservations(storedReservations);
-    updateCartQuantity();
-  }, []);
 
   useEffect(() => {
     localStorage.setItem("courses", JSON.stringify(courses));
     localStorage.setItem("reservations", JSON.stringify(reservations));
-    updateCartQuantity();
   }, [courses, reservations]);
 
-  const updateCartQuantity = () => {
-    const totalQuantity =
-      courses.reduce((sum, course) => sum + course.quantity, 0) +
-      reservations.reduce((sum, reservation) => sum + reservation.quantity, 0);
-    setCartQuantity(totalQuantity);
-  };
+  const cartQuantity =
+    courses.reduce((sum, course) => sum + course.quantity, 0) +
+    reservations.reduce((sum, reservation) => sum + reservation.quantity, 0);
 
   const isTimeReserved = (date, time) =>
     reservations.some(
@@ -37,41 +27,29 @@ export const CartContextProvider = ({ children }) => {
     );
 
   const isProductInCart = (id, categoryId) => {
-    if (categoryId === "cursos") {
-      return courses.some((course) => course.id === id);
-    }
-    if (categoryId === "consultoria") {
-      return reservations.some((reservation) => reservation.id === id);
-    }
-    return false;
+    const items = categoryId === "cursos" ? courses : reservations;
+    return items.some((item) => item.id === id);
   };
 
   const addToCart = (item, quantity, selectedDate, selectedTime) => {
     if (item.categoryId === "cursos") {
       setCourses((prevCourses) => {
-        const existingCourse = prevCourses.find(
-          (course) => course.id === item.id
-        );
-        if (existingCourse) {
-          const newQuantity = existingCourse.quantity + quantity;
+        const updatedCourses = [...prevCourses];
+        const course = updatedCourses.find((c) => c.id === item.id);
+        if (course) {
+          const newQuantity = course.quantity + quantity;
           if (item.stock >= newQuantity) {
-            return prevCourses.map((course) =>
-              course.id === item.id
-                ? {
-                    ...course,
-                    quantity: newQuantity,
-                    stock: item.stock - newQuantity,
-                  }
-                : course
-            );
+            course.quantity = newQuantity;
+            course.stock = item.stock - newQuantity;
           }
         } else if (item.stock >= quantity) {
-          return [
-            ...prevCourses,
-            { ...item, quantity, stock: item.stock - quantity },
-          ];
+          updatedCourses.push({
+            ...item,
+            quantity,
+            stock: item.stock - quantity,
+          });
         }
-        return prevCourses;
+        return updatedCourses;
       });
     } else if (item.categoryId === "consultoria") {
       setReservations((prevReservations) => {
@@ -134,7 +112,7 @@ export const CartContextProvider = ({ children }) => {
     }
   };
 
-  const clear = () => {
+  const clearCart = () => {
     setCourses([]);
     setReservations([]);
     setIsConfirmed(false);
@@ -155,7 +133,7 @@ export const CartContextProvider = ({ children }) => {
     cartVisible,
     addToCart,
     cancelReservation,
-    clear,
+    clearCart,
     isInCart: (id) =>
       courses.some((course) => course.id === id) ||
       reservations.some((reservation) => reservation.id === id),

@@ -4,23 +4,26 @@ import { Card, Button } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "../styles/Home.css";
 
+const categories = [
+  {
+    id: 1,
+    title: "Consultoría Astrológica",
+    path: "category/consultoria",
+  },
+  {
+    id: 2,
+    title: "Cursos On Demand",
+    path: "category/cursos",
+  },
+];
+
 export const Home = () => {
   const [data, setData] = useState([]);
 
   useEffect(() => {
-    const getData = () => {
-      const categoryData = [
-        {
-          id: 1,
-          title: "Consultoría Astrológica",
-          path: "category/consultoria",
-        },
-        { id: 2, title: "Cursos On Demand", path: "category/cursos" },
-      ];
-      setData(categoryData);
-    };
-
-    const timer = setTimeout(getData, 2000);
+    const timer = setTimeout(() => {
+      setData(categories);
+    }, 2000);
 
     return () => clearTimeout(timer);
   }, []);
@@ -28,7 +31,7 @@ export const Home = () => {
   return (
     <main className="home-main">
       <h1 className="home-intro">
-        ¡Bienvenidos al espacio que investiga la conexión entre el Cielo y la
+        ¡Bienvenidos al Espacio que investiga la conexión entre el Cielo y la
         Tierra a través de las Estrellas!
       </h1>
       <div className="home-cards">

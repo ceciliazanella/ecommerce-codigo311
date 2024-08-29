@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { useCart } from "../context/CartContext";
@@ -22,18 +22,48 @@ const validationSchema = Yup.object({
   contrasena: Yup.string().required("Por favor, Ingresá tu Contraseña..."),
 });
 
+const useSnackbar = () => {
+  const [snackbar, setSnackbar] = useState({
+    open: false,
+    message: "",
+    severity: "success",
+  });
+
+  const openSnackbar = useCallback((message, severity) => {
+    setSnackbar({ open: true, message, severity });
+  }, []);
+
+  const closeSnackbar = useCallback(() => {
+    setSnackbar((prev) => ({ ...prev, open: false }));
+  }, []);
+
+  return { snackbar, openSnackbar, closeSnackbar };
+};
+
 export const Ingresar = () => {
   const [showPassword, setShowPassword] = useState(false);
-  const [openSnackbar, setOpenSnackbar] = useState(false);
-  const [snackbarMessage, setSnackbarMessage] = useState("");
-  const [snackbarSeverity, setSnackbarSeverity] = useState("success");
-
   const navigate = useNavigate();
   const { loginUser } = useAuth();
   const { courses, reservations } = useCart();
+  const { snackbar, openSnackbar, closeSnackbar } = useSnackbar();
 
-  const handleClickShowPassword = () => setShowPassword(!showPassword);
-  const handleCloseSnackbar = () => setOpenSnackbar(false);
+  const handleClickShowPassword = () => setShowPassword((prev) => !prev);
+
+  const handleSubmit = async (values, { setSubmitting }) => {
+    const success = loginUser(values);
+    if (success) {
+      openSnackbar(
+        "¡Ya Estás en tu Sesión! ¿Preparado/a para Decodificar tu Cielo?",
+        "success"
+      );
+      setTimeout(() => {
+        navigate(courses.length || reservations.length ? "/checkout" : "/");
+      }, 4000);
+    } else {
+      openSnackbar("Tu Email y/o Contraseña son Incorrectos...", "error");
+    }
+    setSubmitting(false);
+  };
 
   return (
     <div
@@ -44,33 +74,11 @@ export const Ingresar = () => {
         Ingresar
       </Typography>
       <Formik
-        initialValues={{
-          email: "",
-          contrasena: "",
-        }}
+        initialValues={{ email: "", contrasena: "" }}
         validationSchema={validationSchema}
-        onSubmit={async (values, { setSubmitting }) => {
-          const success = loginUser(values);
-          if (success) {
-            setSnackbarMessage(
-              "¡Ya estás dentro de tu Sesión! ¿Preparado/a para decodificar tu Cielo?"
-            );
-            setSnackbarSeverity("success");
-            setOpenSnackbar(true);
-            setTimeout(() => {
-              const hasItemsInCart =
-                courses.length > 0 || reservations.length > 0;
-              navigate(hasItemsInCart ? "/checkout" : "/");
-            }, 4000);
-          } else {
-            setSnackbarMessage("Tu Email y/o Contraseña son Incorrectos...");
-            setSnackbarSeverity("error");
-            setOpenSnackbar(true);
-          }
-          setSubmitting(false);
-        }}
+        onSubmit={handleSubmit}
       >
-        {({ errors, touched }) => (
+        {({ errors, touched, isSubmitting }) => (
           <FormikForm
             noValidate
             style={{ maxWidth: "600px", margin: "0 auto" }}
@@ -107,6 +115,7 @@ export const Ingresar = () => {
               type="submit"
               variant="contained"
               color="primary"
+              disabled={isSubmitting}
               className="vibrate-button"
             >
               Ingresar
@@ -116,25 +125,23 @@ export const Ingresar = () => {
       </Formik>
 
       <Snackbar
-        open={openSnackbar}
+        open={snackbar.open}
         autoHideDuration={3000}
-        onClose={handleCloseSnackbar}
+        onClose={closeSnackbar}
         anchorOrigin={{ vertical: "top", horizontal: "center" }}
-        message={snackbarMessage}
-        action={null}
       >
         <Alert
-          severity={snackbarSeverity}
+          severity={snackbar.severity}
+          onClose={closeSnackbar}
           sx={{
             width: "100%",
-            margin: "0 auto",
             padding: "1rem",
-            backgroundColor: "#fffff",
+            backgroundColor: "#fff",
             borderRadius: "2rem 1.5rem 1.5rem 2rem",
             border: "solid 2px #D0CCD0",
             boxShadow: "2px 3px 10px #36213E",
             fontFamily: "Montserrat",
-            color: snackbarSeverity === "success" ? "#4caf50" : "#f44336",
+            color: snackbar.severity === "success" ? "#4caf50" : "#f44336",
             fontSize: "1rem",
             fontStyle: "italic",
             textShadow: "0.5px 0.5px 1px #000000",
@@ -142,13 +149,12 @@ export const Ingresar = () => {
             alignItems: "center",
             justifyContent: "center",
             "& .MuiAlert-message": {
-              fontFamily: "Montserrat",
               textAlign: "center",
               flex: 1,
             },
           }}
         >
-          {snackbarMessage}
+          {snackbar.message}
         </Alert>
       </Snackbar>
     </div>

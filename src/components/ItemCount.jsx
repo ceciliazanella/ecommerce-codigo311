@@ -1,8 +1,23 @@
 import { useEffect, useState } from "react";
-import { useCart } from "../context/CartContext";
 import { Modal, Button } from "react-bootstrap";
+import { useCart } from "../context/CartContext";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "../styles/ItemCount.css";
+
+const Modal_Content = {
+  success: {
+    title: "¡Agregado con Éxito a tu Carrito!",
+    variant: "success",
+  },
+  outOfStock: {
+    title: "Ouch... ¡Sin Stock!",
+    variant: "danger",
+  },
+  removed: {
+    title: "Eliminado de tu Carrito",
+    variant: "info",
+  },
+};
 
 export const ItemCount = ({ stock, initial, item, onClose = () => {} }) => {
   const { addToCart, removeItem, isProductInCart, courses } = useCart();
@@ -13,40 +28,25 @@ export const ItemCount = ({ stock, initial, item, onClose = () => {} }) => {
 
   useEffect(() => {
     const cartItem = courses.find(({ id }) => id === item.id);
-    if (cartItem) {
-      setAvailableStock(stock - cartItem.quantity);
-      setQuantity(cartItem.quantity);
-    } else {
-      setAvailableStock(stock);
-      setQuantity(initial);
-    }
+    setAvailableStock(cartItem ? stock - cartItem.quantity : stock);
+    setQuantity(cartItem ? cartItem.quantity : initial);
   }, [courses, item.id, stock, initial]);
 
-  const handleIncrement = () => {
-    if (availableStock > 0 && quantity < availableStock) {
-      setQuantity((prev) => prev + 1);
-    }
+  const handleQuantityChange = (change) => {
+    setQuantity((prev) => Math.min(Math.max(prev + change, 1), availableStock));
   };
 
-  const handleDecrement = () => {
-    if (quantity > 1) {
-      setQuantity((prev) => prev - 1);
-    }
-  };
-
-  const handleAddToCartClick = () => {
+  const handleAddToCart = () => {
     if (availableStock > 0 && quantity > 0) {
       addToCart(item, quantity);
       setModalContent({
-        title: "¡Agregado con Éxito a tu Carrito!",
+        ...Modal_Content.success,
         text: `Se Agregaron ${quantity} Unidad/es de ${item.title} a tu Carrito.`,
-        variant: "success",
       });
     } else {
       setModalContent({
-        title: "Ouch... ¡Sin Stock!",
+        ...Modal_Content.outOfStock,
         text: `No hay Stock Disponible de ${item.title} para Agregar a tu Carrito...`,
-        variant: "danger",
       });
     }
     setShowModal(true);
@@ -55,9 +55,8 @@ export const ItemCount = ({ stock, initial, item, onClose = () => {} }) => {
   const handleRemoveFromCart = () => {
     removeItem(item.id, "cursos");
     setModalContent({
-      title: "¡Eliminado de tu Carrito!",
+      ...Modal_Content.removed,
       text: `${item.title} se Eliminó de tu Carrito.`,
-      variant: "info",
     });
     setShowModal(true);
   };
@@ -76,7 +75,7 @@ export const ItemCount = ({ stock, initial, item, onClose = () => {} }) => {
           <p className="in-cart-message">
             ¡Este Curso ahora está en tu Carrito!
           </p>
-          <Button className="btn btn-danger" onClick={handleRemoveFromCart}>
+          <Button variant="danger" onClick={handleRemoveFromCart}>
             Eliminar de mi Carrito
           </Button>
         </>
@@ -84,16 +83,16 @@ export const ItemCount = ({ stock, initial, item, onClose = () => {} }) => {
         <>
           <div className="quantity-controls">
             <Button
-              className={`btn-custom ${quantity <= 1 ? "disabled" : ""}`}
-              onClick={handleDecrement}
+              className="btn-custom"
+              onClick={() => handleQuantityChange(-1)}
               disabled={quantity <= 1}
             >
               -
             </Button>
             <span>{quantity}</span>
             <Button
-              className={`btn-custom ${availableStock <= 0 ? "disabled" : ""}`}
-              onClick={handleIncrement}
+              className="btn-custom"
+              onClick={() => handleQuantityChange(1)}
               disabled={availableStock <= 0 || quantity >= availableStock}
             >
               +
@@ -101,7 +100,7 @@ export const ItemCount = ({ stock, initial, item, onClose = () => {} }) => {
           </div>
           <Button
             className="btn btn-primary"
-            onClick={handleAddToCartClick}
+            onClick={handleAddToCart}
             disabled={availableStock <= 0}
           >
             Agregar a mi Carrito

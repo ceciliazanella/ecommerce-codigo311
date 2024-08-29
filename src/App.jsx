@@ -1,6 +1,7 @@
 import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { CartContextProvider, useCart } from "./context/CartContext";
+import { CartContextProvider } from "./context/CartContext";
+import { useCart } from "./context/CartContext";
 import { AuthProvider } from "./context/AuthContext";
 import { NavBar } from "./components/NavBar";
 import { ItemListContainer } from "./components/ItemListContainer";
@@ -13,10 +14,10 @@ import { Home } from "./components/Home";
 import { Footer } from "./components/Footer";
 import { NotFound } from "./components/NotFound";
 import { ThemeProvider } from "@mui/material/styles";
-import { theme } from "../src/theme";
+import { theme } from "./theme";
 import CssBaseline from "@mui/material/CssBaseline";
 
-function App() {
+const App = () => {
   const { cartQuantity, cartVisible, toggleCartVisibility } = useCart();
 
   return (
@@ -51,6 +52,6 @@ function App() {
       </ThemeProvider>
     </AuthProvider>
   );
-}
+};
 
 export default App;

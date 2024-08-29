@@ -5,23 +5,22 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "../styles/CartWidget.css";
 
 const calculateTotalQuantity = (courses, reservations) => {
-  const courseQuantity =
-    courses?.reduce((acc, item) => acc + item.quantity, 0) || 0;
-  const reservationQuantity =
-    reservations?.reduce((acc, item) => acc + item.quantity, 0) || 0;
+  const courseQuantity = courses.reduce((acc, item) => acc + item.quantity, 0);
+  const reservationQuantity = reservations.reduce(
+    (acc, item) => acc + item.quantity,
+    0
+  );
   return courseQuantity + reservationQuantity;
 };
 
 export const CartWidget = ({ toggleCart }) => {
   const { courses, reservations } = useCart();
-  const [showNotification, setShowNotification] = useState(false);
+  const [totalQuantity, setTotalQuantity] = useState(0);
 
   useEffect(() => {
-    const totalQuantity = calculateTotalQuantity(courses, reservations);
-    setShowNotification(totalQuantity > 0);
+    const quantity = calculateTotalQuantity(courses, reservations);
+    setTotalQuantity(quantity);
   }, [courses, reservations]);
-
-  const totalQuantity = calculateTotalQuantity(courses, reservations);
 
   return (
     <div
@@ -35,7 +34,7 @@ export const CartWidget = ({ toggleCart }) => {
         alt="Ícono de Carrito de Compras"
         className="cart-icon"
       />
-      {showNotification && (
+      {totalQuantity > 0 && (
         <span className="cart-notification">{totalQuantity}</span>
       )}
     </div>

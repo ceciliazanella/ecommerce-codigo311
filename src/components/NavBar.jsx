@@ -13,7 +13,12 @@ export const NavBar = ({ toggleCart }) => {
   const { courses } = useCart();
   const { session, logout } = useAuth();
 
-  const cartCount = courses.reduce((acc, course) => acc + course.quantity, 0);
+  const cartCount = courses.reduce(
+    (total, course) => total + course.quantity,
+    0
+  );
+
+  const linkClass = ({ isActive }) => `nav-link ${isActive ? "active" : ""}`;
 
   return (
     <header>
@@ -30,37 +35,21 @@ export const NavBar = ({ toggleCart }) => {
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav" className="justify-content-end">
           <Nav className="ml-auto align-items-center">
-            <Nav.Link
-              as={NavLink}
-              to="/"
-              className={({ isActive }) =>
-                `nav-link ${isActive ? "active" : ""}`
-              }
-            >
+            <Nav.Link as={NavLink} to="/" className={linkClass}>
               Home
             </Nav.Link>
-            <NavDropdown
-              title="Servicios"
-              id="basic-nav-dropdown"
-              className={({ isActive }) =>
-                `nav-link ${isActive ? "active" : ""}`
-              }
-            >
+            <NavDropdown title="Servicios" id="basic-nav-dropdown">
               <NavDropdown.Item
                 as={NavLink}
                 to="category/consultoria"
-                className={({ isActive }) =>
-                  `nav-link ${isActive ? "active" : ""}`
-                }
+                className={linkClass}
               >
                 Consultoría Astrológica
               </NavDropdown.Item>
               <NavDropdown.Item
                 as={NavLink}
                 to="category/cursos"
-                className={({ isActive }) =>
-                  `nav-link ${isActive ? "active" : ""}`
-                }
+                className={linkClass}
               >
                 Cursos On Demand
               </NavDropdown.Item>
@@ -70,29 +59,17 @@ export const NavBar = ({ toggleCart }) => {
                 <Nav.Link className="navbar-user-name">
                   ¡Hola, {session.nombre}!
                 </Nav.Link>
-                <Nav.Link onClick={logout} className="nav-link-close">
-                  Cerrar mi Sesión
+                <Nav.Link onClick={logout} className={linkClass}>
+                  CERRAR MI SESIÓN
                 </Nav.Link>
               </>
             ) : (
               <>
-                <Nav.Link
-                  as={NavLink}
-                  to="/crearcuenta"
-                  className={({ isActive }) =>
-                    `nav-link ${isActive ? "active" : ""}`
-                  }
-                >
+                <Nav.Link as={NavLink} to="/crearcuenta" className={linkClass}>
                   Crear Cuenta
                   <FontAwesomeIcon icon={faStar} className="star-icon" />
                 </Nav.Link>
-                <Nav.Link
-                  as={NavLink}
-                  to="/ingresar"
-                  className={({ isActive }) =>
-                    `nav-link ${isActive ? "active" : ""}`
-                  }
-                >
+                <Nav.Link as={NavLink} to="/ingresar" className={linkClass}>
                   Ingresar
                   <FontAwesomeIcon icon={faBolt} className="bolt-icon" />
                 </Nav.Link>

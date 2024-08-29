@@ -1,9 +1,9 @@
 import React, { useEffect, useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
+import { Modal, Button } from "react-bootstrap";
 import { useCart } from "../context/CartContext";
 import { ItemCount } from "./ItemCount";
 import { ItemCalendar } from "./ItemCalendar";
-import { Modal, Button } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "../styles/ItemDetail.css";
 

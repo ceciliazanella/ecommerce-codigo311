@@ -13,9 +13,6 @@ export const ItemDetailContainer = () => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    setLoading(true);
-    setError(null);
-
     const itemRef = doc(db, "ItemCollectionI", id);
 
     getDoc(itemRef)
@@ -23,11 +20,11 @@ export const ItemDetailContainer = () => {
         if (itemDetail.exists()) {
           setItem({ ...itemDetail.data(), id: itemDetail.id });
         } else {
-          setError("No se Encontró el Detalle del Ítem Buscado...");
+          setError("Mmm... No se Encontró el Detalle del Servicio Buscado.");
         }
       })
       .catch(() => {
-        setError("Error al Buscar los Detalles del Ítem...");
+        setError("Error al Buscar los Detalles del Servicio.");
       })
       .finally(() => {
         setLoading(false);
@@ -39,6 +36,9 @@ export const ItemDetailContainer = () => {
       {loading && <p>Cargando...</p>}
       {error && <p>{error}</p>}
       {item && !loading && !error && <ItemDetail item={item} />}
+      {!item && !loading && !error && (
+        <p>Los Detalles del Servicio seleccionado no están disponibles...</p>
+      )}
     </div>
   );
 };

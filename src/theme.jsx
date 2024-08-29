@@ -54,7 +54,7 @@ export const theme = createTheme({
           },
         },
         containedSecondary: {
-          padding:"1rem",
+          padding: "1rem",
           backgroundColor: "#D0CCD0",
           boxShadow: "0 0 5px #36213E",
           color: "#907F9F",

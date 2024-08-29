@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import {
@@ -18,37 +18,73 @@ import "../styles/CrearCuenta.css";
 const validationSchema = Yup.object({
   nombre: Yup.string()
     .min(2, "Tu Nombre tiene que tener al menos 2 Carácteres...")
-    .required("Tenés que Ingresar tu Nombre..."),
+    .required("Ingresá tu Nombre..."),
   email: Yup.string()
     .email("Este Email no es Válido...")
-    .required("Tenés que Ingresar tu Email..."),
+    .required("Ingresá tu Email..."),
   confirmEmail: Yup.string()
-    .oneOf([Yup.ref("email"), null], "Tus Correos Electrónicos no coinciden...")
-    .required("Tenés que Reconfirmar tu Email..."),
+    .oneOf([Yup.ref("email"), null], "Los Correos Electrónicos no Coinciden...")
+    .required("Confirmá tu Email..."),
   telefono: Yup.string()
-    .matches(
-      /^[0-9]{10}$/,
-      "Tu Teléfono tiene que ser un Número de 10 Dígitos..."
-    )
-    .required("Tenés que Ingresar tu Teléfono..."),
+    .matches(/^[0-9]{10}$/, "Tu Teléfono tiene que tener 10 Dígitos...")
+    .required("Ingresá tu Número de Teléfono..."),
   contrasena: Yup.string()
     .matches(
       /^(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,}$/,
       "Tu Contraseña tiene que tener al menos 8 Carácteres, una Letra Mayúscula y un Número..."
     )
-    .required("Tenés que Ingresar tu Contraseña..."),
+    .required("Ingresá tu Contraseña..."),
 });
+
+const initialValues = {
+  nombre: "",
+  email: "",
+  confirmEmail: "",
+  telefono: "",
+  contrasena: "",
+};
 
 export const CrearCuenta = () => {
   const navigate = useNavigate();
   const { register } = useAuth();
-  const [showPassword, setShowPassword] = React.useState(false);
-  const [openSnackbar, setOpenSnackbar] = React.useState(false);
-  const [snackbarMessage, setSnackbarMessage] = React.useState("");
-  const [snackbarSeverity, setSnackbarSeverity] = React.useState("success");
+  const [showPassword, setShowPassword] = useState(false);
+  const [snackbar, setSnackbar] = useState({
+    open: false,
+    message: "",
+    severity: "success",
+  });
 
-  const handleClickShowPassword = () => setShowPassword(!showPassword);
-  const handleCloseSnackbar = () => setOpenSnackbar(false);
+  const handleClickShowPassword = useCallback(() => {
+    setShowPassword((prev) => !prev);
+  }, []);
+
+  const handleCloseSnackbar = useCallback(() => {
+    setSnackbar((prev) => ({ ...prev, open: false }));
+  }, []);
+
+  const handleSubmit = async (values, { setSubmitting }) => {
+    try {
+      const errorMessage = await register(values);
+      setSnackbar({
+        open: true,
+        message:
+          errorMessage ||
+          "¡Todo un Éxito! Ya Creaste tu Cuenta... ¿Estás Listo/a para Decodificar tu Cielo?",
+        severity: errorMessage ? "error" : "success",
+      });
+      if (!errorMessage) {
+        setTimeout(() => navigate("/ingresar"), 6000);
+      }
+    } catch {
+      setSnackbar({
+        open: true,
+        message: "Mmm... Hubo un Error. Por favor, ¡Intentá Otra Vez!",
+        severity: "error",
+      });
+    } finally {
+      setSubmitting(false);
+    }
+  };
 
   return (
     <div
@@ -59,36 +95,11 @@ export const CrearCuenta = () => {
         Crear Cuenta
       </Typography>
       <Formik
-        initialValues={{
-          nombre: "",
-          email: "",
-          confirmEmail: "",
-          telefono: "",
-          contrasena: "",
-        }}
+        initialValues={initialValues}
         validationSchema={validationSchema}
-        onSubmit={async (values, { setSubmitting }) => {
-          const errorMessage = register(values);
-          if (errorMessage) {
-            setSnackbarMessage(errorMessage);
-            setSnackbarSeverity("error");
-            setOpenSnackbar(true);
-            setSubmitting(false);
-            return;
-          }
-
-          setSnackbarMessage(
-            "¡La Creación de tu Cuenta fue todo un Éxito! Ahora estás a un paso de Conectar con el Código de tu Cielo... ¡Te acompañamos a Iniciar tu Sesión!"
-          );
-          setSnackbarSeverity("success");
-          setOpenSnackbar(true);
-          setTimeout(() => {
-            navigate("/ingresar");
-          }, 8000);
-          setSubmitting(false);
-        }}
+        onSubmit={handleSubmit}
       >
-        {({ errors, touched }) => (
+        {({ errors, touched, isSubmitting }) => (
           <FormikForm
             noValidate
             style={{ maxWidth: "600px", margin: "0 auto" }}
@@ -157,6 +168,7 @@ export const CrearCuenta = () => {
               type="submit"
               variant="contained"
               color="primary"
+              disabled={isSubmitting}
               className="vibrate-button"
             >
               Crear tu Cuenta
@@ -164,15 +176,15 @@ export const CrearCuenta = () => {
           </FormikForm>
         )}
       </Formik>
-
       <Snackbar
-        open={openSnackbar}
+        open={snackbar.open}
         autoHideDuration={3000}
         onClose={handleCloseSnackbar}
         anchorOrigin={{ vertical: "top", horizontal: "center" }}
       >
         <Alert
-          severity={snackbarSeverity}
+          severity={snackbar.severity}
+          onClose={handleCloseSnackbar}
           sx={{
             width: "100%",
             margin: "0 auto",
@@ -181,11 +193,11 @@ export const CrearCuenta = () => {
             borderRadius: "2rem 1.5rem 1.5rem 2rem",
             boxShadow: "2px 3px 10px #36213E",
             fontFamily: "Montserrat",
-            color: snackbarSeverity === "success" ? "#4caf50" : "#f44336",
+            color: snackbar.severity === "success" ? "#4caf50" : "#f44336",
             fontSize: "1rem",
             fontStyle: "italic",
             textShadow: "0.5px 0.5px 1px #000000",
-            backgroundColor: "#fffff",
+            backgroundColor: "#fff",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
@@ -199,7 +211,7 @@ export const CrearCuenta = () => {
             },
           }}
         >
-          {snackbarMessage}
+          {snackbar.message}
         </Alert>
       </Snackbar>
     </div>

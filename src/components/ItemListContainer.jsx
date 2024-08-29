@@ -1,11 +1,16 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { db } from "../firebase/config";
-import { collection, query, where, getDocs } from "firebase/firestore";
+import { collection, getDocs } from "firebase/firestore";
 import { useCart } from "../context/CartContext";
 import { ItemList } from "./ItemList";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "../styles/ItemListContainer.css";
+
+const Category_Titles = {
+  consultoria: "Consultoría Astrológica",
+  cursos: "Cursos On Demand",
+};
 
 export const ItemListContainer = ({ addToCart }) => {
   const { id: categoryId } = useParams();
@@ -14,41 +19,35 @@ export const ItemListContainer = ({ addToCart }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const getTitle = (categoryId) => {
-    const titles = {
-      consultoria: "Consultoría Astrológica",
-      cursos: "Cursos On Demand",
-    };
-    return titles[categoryId] || "Categoría no Encontrada";
-  };
-
   useEffect(() => {
     setLoading(true);
     setError(null);
 
     const itemsRef = collection(db, "ItemCollectionI");
-    const q = query(itemsRef, where("categoryId", "==", categoryId));
 
-    getDocs(q)
+    getDocs(itemsRef)
       .then((querySnapshot) => {
         const allItems = querySnapshot.docs.map((doc) => ({
           ...doc.data(),
           id: doc.id,
         }));
 
-        const filteredItems = allItems.filter((item) => {
+        const filteredItems = allItems.filter(
+          (item) => item.categoryId === categoryId
+        );
+
+        const updatedItems = filteredItems.map((item) => {
           const storedItem = courses.find((course) => course.id === item.id);
           if (storedItem) {
-            item.stock = item.stock - storedItem.quantity;
-            return true;
+            return { ...item, stock: item.stock - storedItem.quantity };
           }
-          return true;
+          return item;
         });
 
-        setItems(filteredItems);
+        setItems(updatedItems);
       })
       .catch((err) => {
-        setError("Error al querer Extraer los Datos de los Servicios...");
+        setError("Mmmm... Error al querer Extraer los Datos de los Servicios.");
         console.error("Error al Extraer los Datos de los Servicios:", err);
       })
       .finally(() => {
@@ -56,9 +55,11 @@ export const ItemListContainer = ({ addToCart }) => {
       });
   }, [categoryId, courses]);
 
+  const title = Category_Titles[categoryId] || "Categoría no encontrada...";
+
   return (
     <div className="item-list-container">
-      <h1 className="h1-title">{getTitle(categoryId)}</h1>
+      <h1 className="h1-title">{title}</h1>
       <div className="item-list-content">
         {loading && <p>Cargando...</p>}
         {error && <p>{error}</p>}

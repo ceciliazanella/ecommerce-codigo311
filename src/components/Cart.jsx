@@ -1,10 +1,28 @@
-import { useState, useMemo } from "react";
-import { Link } from "react-router-dom";
+import { useState, useMemo, useCallback } from "react";
 import { useContext } from "react";
-import { CartContext } from "../context/CartContext";
+import { Link } from "react-router-dom";
 import { Modal, Button } from "react-bootstrap";
+import { CartContext } from "../context/CartContext";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "../styles/Cart.css";
+
+const useModal = () => {
+  const [showModal, setShowModal] = useState(false);
+  const [modalContent, setModalContent] = useState({});
+  const [actionType, setActionType] = useState("");
+
+  const show = useCallback((type, content) => {
+    setActionType(type);
+    setModalContent(content);
+    setShowModal(true);
+  }, []);
+
+  const hide = useCallback(() => {
+    setShowModal(false);
+  }, []);
+
+  return { showModal, modalContent, actionType, show, hide };
+};
 
 export const Cart = () => {
   const {
@@ -13,14 +31,11 @@ export const Cart = () => {
     cancelReservation,
     removeItem,
     updateCartItem,
-    clear,
+    clearCart,
   } = useContext(CartContext);
-
   const [isVisible, setIsVisible] = useState(true);
-  const [showModal, setShowModal] = useState(false);
-  const [modalContent, setModalContent] = useState({});
-  const [actionType, setActionType] = useState("");
   const [isCartEmpty, setIsCartEmpty] = useState(false);
+  const { showModal, modalContent, actionType, show, hide } = useModal();
 
   const cartTotal = useMemo(() => {
     const coursesSubtotal = courses.reduce(
@@ -57,15 +72,14 @@ export const Cart = () => {
     itemType,
     currentQuantity
   ) => {
-    setActionType(action);
-    setModalContent({
+    const content = {
       title: action,
       text: getConfirmText(action),
       itemId,
       itemType,
       currentQuantity,
-    });
-    setShowModal(true);
+    };
+    show(action, content);
   };
 
   const handleAction = () => {
@@ -78,7 +92,7 @@ export const Cart = () => {
         removeItem(itemId, itemType);
         break;
       case "Vaciar Carrito":
-        clear();
+        clearCart();
         setIsCartEmpty(true);
         break;
       case "Sumar":
@@ -100,7 +114,7 @@ export const Cart = () => {
       default:
         break;
     }
-    setShowModal(false);
+    hide();
   };
 
   const isIncrementDisabled = (course) =>
@@ -233,7 +247,7 @@ export const Cart = () => {
         )}
       </div>
 
-      <Modal show={showModal} onHide={() => setShowModal(false)} centered>
+      <Modal show={showModal} onHide={hide} centered>
         <Modal.Header closeButton>
           <Modal.Title>{modalContent.title}</Modal.Title>
         </Modal.Header>
@@ -242,7 +256,7 @@ export const Cart = () => {
           <Button variant="primary" onClick={handleAction}>
             Confirmar
           </Button>
-          <Button variant="secondary" onClick={() => setShowModal(false)}>
+          <Button variant="secondary" onClick={hide}>
             Cancelar
           </Button>
         </Modal.Footer>

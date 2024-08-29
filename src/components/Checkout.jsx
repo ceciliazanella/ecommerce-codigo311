@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { db } from "../firebase/config";
 import { collection, addDoc } from "firebase/firestore";
@@ -18,60 +18,76 @@ import { Formik, Field, Form as FormikForm, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import "../styles/Checkout.css";
 
-const validationSchema = Yup.object({
-  nombre: Yup.string().when("$isRegistering", {
-    is: true,
-    then: Yup.string().required("Por favor, Ingresá tu Nombre..."),
-  }),
+const registrationSchema = Yup.object({
+  nombre: Yup.string().required("Por favor, Ingresá tu Nombre..."),
   email: Yup.string()
     .email("Este Correo Electrónico es Inválido...")
     .required("Por favor, Ingresá tu Email..."),
-  confirmEmail: Yup.string().when("$isRegistering", {
-    is: true,
-    then: Yup.string().oneOf(
-      [Yup.ref("email")],
-      "Los Correos Electrónicos Ingresados tienen que Coincidir..."
-    ),
-  }),
-  telefono: Yup.string().when("$isRegistering", {
-    is: true,
-    then: Yup.string().required("Por favor, Ingresá tu Número de Teléfono..."),
-  }),
-  contrasena: Yup.string().when("$isRegistering", {
-    is: true,
-    then: Yup.string()
-      .min(8, "La Contraseña tiene que tener al menos 8 Carácteres...")
-      .required("Por favor, Ingresá tu Contraseña..."),
-  }),
-  confirmContrasena: Yup.string().when("$isRegistering", {
-    is: true,
-    then: Yup.string().oneOf(
-      [Yup.ref("contrasena")],
-      "Tus Contraseñas tienen que Coincidir..."
-    ),
-  }),
+  confirmEmail: Yup.string()
+    .oneOf(
+      [Yup.ref("email"), null],
+      "Los Correos Electrónicos tienen que Coincidir..."
+    )
+    .required("Por favor, Confirmá tu Email..."),
+  telefono: Yup.string()
+    .matches(
+      /^[0-9]{10}$/,
+      "El Número de Teléfono tiene que tener 10 Dígitos..."
+    )
+    .required("Por favor, Ingresá tu Número de Teléfono..."),
+  contrasena: Yup.string()
+    .min(8, "La Contraseña tiene que tener al menos 8 Carácteres...")
+    .matches(
+      /^(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,}$/,
+      "Tiene que tener al menos una Letra Mayúscula y un Número..."
+    )
+    .required("Por favor, Ingresá tu Contraseña..."),
+  confirmContrasena: Yup.string()
+    .oneOf(
+      [Yup.ref("contrasena"), null],
+      "Las Contraseñas tienen que Coincidir..."
+    )
+    .required("Por favor, Confirmá tu Contraseña..."),
+});
+
+const loginSchema = Yup.object({
+  email: Yup.string()
+    .email("Este Correo Eelectrónico es Inválido...")
+    .required("Por favor, Ingresá tu Email..."),
+  contrasena: Yup.string()
+    .min(8, "La Contraseña tiene que tener al menos 8 Carácteres...")
+    .matches(
+      /^(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,}$/,
+      "Tiene que tener al menos una Letra Mayúscula y un Número..."
+    )
+    .required("Por favor, Ingresá tu Contraseña..."),
 });
 
 export const Checkout = () => {
   const { session, loginUser, register } = useAuth();
-  const { courses, reservations, clear } = useCart();
+  const { courses, reservations, clearCart } = useCart();
   const navigate = useNavigate();
 
   const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [isRegistering, setIsRegistering] = useState(false);
+  const [isProcessing, setIsProcessing] = useState(false);
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [snackbarSeverity, setSnackbarSeverity] = useState("success");
-  const [isRegistering, setIsRegistering] = useState(false);
-  const [isProcessing, setIsProcessing] = useState(false);
 
   useEffect(() => {
     if (session) navigate("/checkout");
   }, [session, navigate]);
 
-  const handleClickShowPassword = useCallback(
-    () => setShowPassword((prev) => !prev),
-    []
-  );
+  const handleClickShowPassword = useCallback(() => {
+    setShowPassword((prev) => !prev);
+  }, []);
+
+  const handleClickShowConfirmPassword = useCallback(() => {
+    setShowConfirmPassword((prev) => !prev);
+  }, []);
+
   const handleCloseSnackbar = useCallback(() => setOpenSnackbar(false), []);
 
   const handleSubmit = async (values, { setSubmitting }) => {
@@ -80,22 +96,24 @@ export const Checkout = () => {
       if (isRegistering) {
         await handleRegistration(values);
         setSnackbarMessage(
-          "¡Creaste tu Cuenta con Éxito! Ya estás dentro de tu Sesión."
+          "¡Tu Cuenta es todo un Éxito! Ya estás dentro de tu Sesión."
         );
         setSnackbarSeverity("success");
+        setOpenSnackbar(true);
         setTimeout(() => navigate("/checkout"), 4000);
       } else {
         await handleLogin(values);
-        setSnackbarMessage("¡Iniciaste Exitosamente tu Sesión!");
+        setSnackbarMessage("¡Iniciaste tu Sesión Exitosamente!");
         setSnackbarSeverity("success");
+        setOpenSnackbar(true);
         setTimeout(() => navigate("/checkout"), 3000);
       }
     } catch (error) {
-      setSnackbarMessage(error.message || "Mmm Error Desconocido...");
+      setSnackbarMessage(error.message || "Mmmm... Error Desconocido...");
       setSnackbarSeverity("error");
+      setOpenSnackbar(true);
     } finally {
       setSubmitting(false);
-      setOpenSnackbar(true);
       setIsProcessing(false);
     }
   };
@@ -139,7 +157,7 @@ export const Checkout = () => {
       contrasena: values.contrasena,
     });
     if (!success) {
-      throw new Error("Mmm... este Email y/o Contraseña son Inválidos...");
+      throw new Error("Este Email y/o Contraseña son Inválidos...");
     }
   };
 
@@ -181,24 +199,22 @@ export const Checkout = () => {
     };
 
     try {
-      const docRef = await addDoc(
-        collection(db, "ItemCollectionII"),
-        orderData
-      );
+      const docRef = await addDoc(collection(db, "Orders"), orderData);
       setSnackbarMessage(
         `¡Realizaste tu Compra con Éxito! Tu N° de Orden de Pedido es ${docRef.id} ¡Gracias por Confiar y Elegir Código 3.11!`
       );
       setSnackbarSeverity("success");
-      clear();
+      setOpenSnackbar(true);
+      clearCart();
       setTimeout(() => navigate("/"), 6000);
     } catch {
       setSnackbarMessage(
-        "Mmm... Hubo un Error al querer efectuar tu Compra... ¡Intentalo Otra Vez!"
+        "Hubo un Error al intentar efectuar tu Compra... ¡Intentalo Otra Vez!"
       );
       setSnackbarSeverity("error");
+      setOpenSnackbar(true);
     } finally {
       setIsProcessing(false);
-      setOpenSnackbar(true);
     }
   };
 
@@ -252,8 +268,10 @@ export const Checkout = () => {
                             <Typography>
                               Precio: ${reservation.price}
                             </Typography>
-                            <Typography>Fecha: {reservation.date}</Typography>
-                            <Typography>Hora: {reservation.time}</Typography>
+                            <Typography>
+                              Fecha: {reservation.date} - Hora:{" "}
+                              {reservation.time}
+                            </Typography>
                           </div>
                         </li>
                       ))}
@@ -274,123 +292,161 @@ export const Checkout = () => {
           </>
         ) : (
           <Formik
-            initialValues={{
-              nombre: isRegistering ? "" : undefined,
-              email: "",
-              confirmEmail: isRegistering ? "" : undefined,
-              telefono: isRegistering ? "" : undefined,
-              contrasena: isRegistering ? "" : undefined,
-              confirmContrasena: isRegistering ? "" : undefined,
-            }}
-            validationSchema={validationSchema}
+            initialValues={
+              isRegistering
+                ? {
+                    nombre: "",
+                    email: "",
+                    confirmEmail: "",
+                    telefono: "",
+                    contrasena: "",
+                    confirmContrasena: "",
+                  }
+                : {
+                    email: "",
+                    contrasena: "",
+                  }
+            }
+            validationSchema={isRegistering ? registrationSchema : loginSchema}
             onSubmit={handleSubmit}
-            validateOnChange={false}
-            validateOnBlur={false}
-            enableReinitialize
           >
-            {({ errors, touched, handleChange, handleBlur, values }) => (
+            {({ errors, touched, isValid, dirty }) => (
               <FormikForm noValidate>
-                {isRegistering && (
-                  <Field
-                    name="nombre"
-                    as={TextField}
-                    label="Nombre"
-                    variant="outlined"
-                    margin="normal"
-                    fullWidth
-                    error={Boolean(errors.nombre && touched.nombre)}
-                    helperText={<ErrorMessage name="nombre" />}
-                  />
-                )}
-                <Field
-                  name="email"
-                  as={TextField}
-                  label="Email"
-                  variant="outlined"
-                  margin="normal"
-                  fullWidth
-                  error={Boolean(errors.email && touched.email)}
-                  helperText={<ErrorMessage name="email" />}
-                />
-                {isRegistering && (
-                  <Field
-                    name="confirmEmail"
-                    as={TextField}
-                    label="Confirmar Email"
-                    variant="outlined"
-                    margin="normal"
-                    fullWidth
-                    error={Boolean(errors.confirmEmail && touched.confirmEmail)}
-                    helperText={<ErrorMessage name="confirmEmail" />}
-                  />
-                )}
-                {isRegistering && (
-                  <Field
-                    name="telefono"
-                    as={TextField}
-                    label="Teléfono"
-                    variant="outlined"
-                    margin="normal"
-                    fullWidth
-                    error={Boolean(errors.telefono && touched.telefono)}
-                    helperText={<ErrorMessage name="telefono" />}
-                  />
-                )}
-                <Field
-                  name="contrasena"
-                  as={TextField}
-                  label="Contraseña"
-                  type={showPassword ? "text" : "password"}
-                  variant="outlined"
-                  margin="normal"
-                  fullWidth
-                  InputProps={{
-                    endAdornment: (
-                      <InputAdornment position="end">
-                        <IconButton
-                          onClick={handleClickShowPassword}
-                          edge="end"
-                        >
-                          {showPassword ? <FaEyeSlash /> : <FaEye />}
-                        </IconButton>
-                      </InputAdornment>
-                    ),
-                  }}
-                  error={Boolean(errors.contrasena && touched.contrasena)}
-                  helperText={<ErrorMessage name="contrasena" />}
-                />
-                {isRegistering && (
-                  <Field
-                    name="confirmContrasena"
-                    as={TextField}
-                    label="Confirmar Contraseña"
-                    type={showPassword ? "text" : "password"}
-                    variant="outlined"
-                    margin="normal"
-                    fullWidth
-                    InputProps={{
-                      endAdornment: (
-                        <InputAdornment position="end">
-                          <IconButton
-                            onClick={handleClickShowPassword}
-                            edge="end"
-                          >
-                            {showPassword ? <FaEyeSlash /> : <FaEye />}
-                          </IconButton>
-                        </InputAdornment>
-                      ),
-                    }}
-                    error={Boolean(
-                      errors.confirmContrasena && touched.confirmContrasena
-                    )}
-                    helperText={<ErrorMessage name="confirmContrasena" />}
-                  />
+                {isRegistering ? (
+                  <>
+                    <Field
+                      name="nombre"
+                      as={TextField}
+                      label="Nombre"
+                      variant="outlined"
+                      margin="normal"
+                      fullWidth
+                      error={Boolean(errors.nombre && touched.nombre)}
+                      helperText={<ErrorMessage name="nombre" />}
+                    />
+                    <Field
+                      name="email"
+                      as={TextField}
+                      label="Email"
+                      variant="outlined"
+                      margin="normal"
+                      fullWidth
+                      error={Boolean(errors.email && touched.email)}
+                      helperText={<ErrorMessage name="email" />}
+                    />
+                    <Field
+                      name="confirmEmail"
+                      as={TextField}
+                      label="Confirmar Email"
+                      variant="outlined"
+                      margin="normal"
+                      fullWidth
+                      error={Boolean(
+                        errors.confirmEmail && touched.confirmEmail
+                      )}
+                      helperText={<ErrorMessage name="confirmEmail" />}
+                    />
+                    <Field
+                      name="telefono"
+                      as={TextField}
+                      label="Teléfono"
+                      variant="outlined"
+                      margin="normal"
+                      fullWidth
+                      error={Boolean(errors.telefono && touched.telefono)}
+                      helperText={<ErrorMessage name="telefono" />}
+                    />
+                    <Field
+                      name="contrasena"
+                      as={TextField}
+                      label="Contraseña"
+                      type={showPassword ? "text" : "password"}
+                      variant="outlined"
+                      margin="normal"
+                      fullWidth
+                      InputProps={{
+                        endAdornment: (
+                          <InputAdornment position="end">
+                            <IconButton
+                              onClick={handleClickShowPassword}
+                              edge="end"
+                            >
+                              {showPassword ? <FaEyeSlash /> : <FaEye />}
+                            </IconButton>
+                          </InputAdornment>
+                        ),
+                      }}
+                      error={Boolean(errors.contrasena && touched.contrasena)}
+                      helperText={<ErrorMessage name="contrasena" />}
+                    />
+                    <Field
+                      name="confirmContrasena"
+                      as={TextField}
+                      label="Confirmar Contraseña"
+                      type={showConfirmPassword ? "text" : "password"}
+                      variant="outlined"
+                      margin="normal"
+                      fullWidth
+                      InputProps={{
+                        endAdornment: (
+                          <InputAdornment position="end">
+                            <IconButton
+                              onClick={handleClickShowConfirmPassword}
+                              edge="end"
+                            >
+                              {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
+                            </IconButton>
+                          </InputAdornment>
+                        ),
+                      }}
+                      error={Boolean(
+                        errors.confirmContrasena && touched.confirmContrasena
+                      )}
+                      helperText={<ErrorMessage name="confirmContrasena" />}
+                    />
+                  </>
+                ) : (
+                  <>
+                    <Field
+                      name="email"
+                      as={TextField}
+                      label="Email"
+                      variant="outlined"
+                      margin="normal"
+                      fullWidth
+                      error={Boolean(errors.email && touched.email)}
+                      helperText={<ErrorMessage name="email" />}
+                    />
+                    <Field
+                      name="contrasena"
+                      as={TextField}
+                      label="Contraseña"
+                      type={showPassword ? "text" : "password"}
+                      variant="outlined"
+                      margin="normal"
+                      fullWidth
+                      InputProps={{
+                        endAdornment: (
+                          <InputAdornment position="end">
+                            <IconButton
+                              onClick={handleClickShowPassword}
+                              edge="end"
+                            >
+                              {showPassword ? <FaEyeSlash /> : <FaEye />}
+                            </IconButton>
+                          </InputAdornment>
+                        ),
+                      }}
+                      error={Boolean(errors.contrasena && touched.contrasena)}
+                      helperText={<ErrorMessage name="contrasena" />}
+                    />
+                  </>
                 )}
                 <Button
                   type="submit"
                   variant="contained"
                   color="primary"
-                  disabled={isProcessing}
+                  disabled={isProcessing || !isValid || !dirty}
                 >
                   {isProcessing
                     ? "Procesando..."
@@ -405,7 +461,7 @@ export const Checkout = () => {
                 >
                   {isRegistering
                     ? "¿Ya tenés tu Cuenta? Iniciá Sesión"
-                    : "¿Todavía no tenés tu Cuenta? Registrate"}
+                    : "¿No tenés una Cuenta? Registrate"}
                 </Button>
               </FormikForm>
             )}
@@ -420,6 +476,7 @@ export const Checkout = () => {
         anchorOrigin={{ vertical: "top", horizontal: "center" }}
       >
         <Alert
+          onClose={handleCloseSnackbar}
           severity={snackbarSeverity}
           sx={{
             width: "100%",
@@ -433,7 +490,7 @@ export const Checkout = () => {
             fontSize: "1rem",
             fontStyle: "italic",
             textShadow: "0.5px 0.5px 1px #000000",
-            backgroundColor: "#fffff",
+            backgroundColor: "#fff",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",

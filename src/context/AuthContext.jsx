@@ -1,6 +1,6 @@
 import React, { createContext, useState, useContext, useEffect } from "react";
 
-const AuthContext = createContext();
+export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [session, setSession] = useState(() => {
@@ -8,11 +8,10 @@ export const AuthProvider = ({ children }) => {
     return storedSession ? JSON.parse(storedSession) : null;
   });
 
-  const loginUser = (credentials) => {
+  const loginUser = ({ email, contrasena }) => {
     const users = JSON.parse(localStorage.getItem("users")) || [];
     const user = users.find(
-      (u) =>
-        u.email === credentials.email && u.contrasena === credentials.contrasena
+      (u) => u.email === email && u.contrasena === contrasena
     );
 
     if (user) {
@@ -30,27 +29,15 @@ export const AuthProvider = ({ children }) => {
   };
 
   const register = (credentials) => {
+    const { nombre, email, telefono, contrasena } = credentials;
     const users = JSON.parse(localStorage.getItem("users")) || [];
-    const newUser = {
-      nombre: credentials.nombre || "",
-      email: credentials.email || "",
-      telefono: credentials.telefono || "",
-      contrasena: credentials.contrasena || "",
-    };
+    const emailTaken = users.some((user) => user.email === email);
 
-    const isEmailTaken = users.some((user) => user.email === newUser.email);
-    const isUserExists = users.some(
-      (user) => user.email === newUser.email && user.nombre === newUser.nombre
-    );
-
-    if (isUserExists) {
-      return "Ya Existe una Cuenta con este mismo Nombre y/o Correo Electrónico...";
-    }
-
-    if (isEmailTaken) {
+    if (emailTaken) {
       return "Ya Existe una Cuenta con este mismo Correo Electrónico...";
     }
 
+    const newUser = { nombre, email, telefono, contrasena };
     users.push(newUser);
     localStorage.setItem("users", JSON.stringify(users));
     return null;
